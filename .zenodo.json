@@ -1,0 +1,40 @@
+{
+  "title": "A Candidate Lean 4 Statement of the Yang–Mills Existence and Mass Gap Problem: Adversarial AI Review and a Research Programme (No Proof Is Claimed)",
+  "upload_type": "publication",
+  "publication_type": "preprint",
+  "description": "<p><strong>This record does not contain a proof of Yang–Mills existence or of a mass gap.</strong></p>\n<p>It contains: (i) a candidate formal statement, in Lean 4 with Mathlib, of the Clay Millennium problem <em>Yang–Mills existence and mass gap</em> and of an existence-only variant (Osterwalder–Schrader axioms with OS II linear growth; a Euclidean mass-gap predicate; identification as Yang–Mills via a Wilson-lattice continuum-limit clause, full field content for the 21 components of tr F<sub>μν</sub>F<sub>κλ</sub>, and a short-distance asymptotic-freedom fingerprint); (ii) machine-checked sanity and non-vacuity results depending only on Lean's standard axioms (including: SU(N) is connected, its Lie algebra is su(N), and su(N) is simple for N ≥ 2); (iii) an adversarial-review methodology and its findings (a critical defect in the first draft — the cluster axiom admitted the zero vector — and four major fidelity defects, two fixed and two only partly — short-distance agreement is a scalar two-point fingerprint without a stress tensor or OPE, and dependence on the Wilson lattice remains — both recorded as deviations); (iv) a research library compiled and cross-checked by AI agents (11 notes; 666 bibliography entries whose existence and metadata were checked, a few flagged as unconfirmed) and a research programme with explicit subjective odds, stop rules and an AI operating model informed by OpenAI's 2026 Navier–Stokes agent swarm and public Lean repositories.</p>\n<p>The statement's main design elements (Wilson-lattice identification, the 21-component field content, an asymptotic-freedom fingerprint) also appear in the earlier candidate statement of K. Rémondière (ClayYM, Zenodo, 10.5281/zenodo.23650415), which predates this work.</p>\n<p>The work was undertaken under the working premise that OpenAI's announced existence proof is correct; that premise is not evaluated here. By the author's account (based on local Git commits that are not public), the statement, its review and the research library were completed on 6 November 2026, before the shepherding committee published OpenAI's Lean code on 10 November 2026 with an assessment that the committee describes as validating it; the accompanying text was revised on 10–11 November. This deposit was made after that release and is not a pre-registration. Neither OpenAI's Lean code nor the committee's assessment is examined here. The statement is a candidate: it has been reviewed adversarially by AI agents but not audited by human experts.</p>\n<p><strong>AI-use disclosure.</strong> Anthropic's Claude large language models, operated through the Claude Code agent environment (including multi-agent workflows, web retrieval and the Lean toolchain), performed essentially all literature search and summarization, drafting, Lean design and proofs, and adversarial review. The human author set the goal and premise, directed the work, chose the publication route and licences, read the paper before deposit, and takes responsibility for publication; the author is not trained in constructive QFT or Lean. No human domain expert has reviewed the work. The author declares no competing interests and received no funding. Only the Lean results listed in the paper are machine-checked; natural-language content was reviewed only by AI agents. See Section 9 of the paper.</p>\n<p>Licences, by file type: Lean code and scripts under Apache-2.0; all other content under CC BY 4.0 (see LICENSE). Third-party PDFs are not redistributed (a manifest and download script are included).</p>",
+  "creators": [
+    {
+      "name": "Lowes, Peter"
+    }
+  ],
+  "license": "cc-by-4.0",
+  "keywords": [
+    "Yang–Mills theory",
+    "mass gap",
+    "Millennium Prize Problems",
+    "Lean 4",
+    "Mathlib",
+    "formal verification",
+    "constructive quantum field theory",
+    "Osterwalder–Schrader axioms",
+    "AI-assisted mathematics",
+    "AI disclosure"
+  ],
+  "notes": "Version 0.2.0. Not a proof and not a pre-registration. Candidate statement; no human expert review yet. AI-generated content disclosed in paper Section 9. Licensing is by file type: Lean code and scripts under Apache-2.0, all other content under CC BY 4.0 (see LICENSE); the licence field shows only CC BY 4.0 because the GitHub integration accepts a single licence.",
+  "language": "eng",
+  "related_identifiers": [
+    {
+      "identifier": "https://github.com/betterfuture2030/yang-mills-lean/tree/v0.2.0",
+      "relation": "isSupplementTo",
+      "resource_type": "software",
+      "scheme": "url"
+    },
+    {
+      "identifier": "10.5281/zenodo.23650415",
+      "relation": "references",
+      "scheme": "doi"
+    }
+  ],
+  "version": "0.2.0"
+}

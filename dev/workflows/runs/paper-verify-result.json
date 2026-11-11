@@ -1,0 +1,968 @@
+{
+  "summary": "Adversarially verify the Yang-Mills paper: citations (existence + support), factual claims, math, AI disclosure",
+  "agentCount": 7,
+  "logs": [],
+  "result": [
+    {
+      "task": "cite-1",
+      "result": {
+        "checked": "I checked all 28 keys against live sources on 2026-11-06.\n\n**Metadata confirmed:**\n- **arXiv API:** 2609.20803 (Constantin, Ignatova, Vicol; v2 29 Sep 2026, math.AP) and 2610.08144 (Bastounis, Circelli, Hansen; 6 Oct 2026). Titles and authors match.\n- **Crossref:** BF01645738 and BF01608978 (Osterwalder–Schrader, CMP 31:83–112 and 42:281–305); BF01215753, BF01215223, BF01239022, BF01257412 and BF01238433 (Bałaban; volumes, pages and years all match); BF02097397 (Magnen–Rivasseau–Sénéor, CMP 155:325–383); s42254-025-00909-2 (Douglas, Nat. Rev. Phys. 8(2):86–97, issued 12 Jan 2026).\n- **Streater–Wightman:** the ISBN 978-0-691-07062-9 resolves via OpenLibrary to the Princeton Landmarks edition.\n- **GitHub API:**\n  - openai/NavierStokesAndEuler: created 2026-09-08; commits 8937a8f (8 Sep) and f9e8bc5 (10 Sep) both confirmed.\n  - ethanwsussman/Yang--Mills-LLM-experiment: created 2026-10-06. The README supports QED3/YM3 manuscripts, an unfinished YM4, and Claude-generated slop.\n  - pmaronow/3d-ym-torus: created 2026-10-17. Its README now calls the repo \"dated\" and points to Hexagon.\n- **PDFs downloaded and text-extracted:**\n  - Both committee statements. These quotes are verbatim: \"among the important elements\", \"confinement and the mass gap remain very important open challenges\", \"full 1147-page LLM proofs\", and \"definitions and problem statements correspond with those that are standard in physics and mathematics\" (2nd statement). \"Our first objective\" is in the 1st statement.\n  - Jaffe–Witten (claymath). These are verbatim: \"at least as strong as\", \"in the above sense\", the renormalization footnote, \"Establishing a quantum mechanical Hilbert space is part of the solution\", the m<∞ requirement, and the weak-existence footnote. Refs [45] and [35] are Streater–Wightman and OS I/II.\n  - Douglas 2004 (ncatlab). \"State of the art remains the works of Balaban and of Magnen, Rivasseau and Sénéor\" and \"lattice Yang-Mills is not essential\" are both verbatim.\n  - Fefferman (claymath): title matches.\n  - OpenAI NS PDF (cdn): 166 pp, created 8 Sep 2026, Theorem 1.1 has a C_c^∞ force.\n- **WebFetch:**\n  - Woit p=15948, 26 Oct: quotes OpenAI verbatim (\"gauge fields and fermions in four dimensions\"); no gauge group named; no mass gap.\n  - QRC, 28 Oct.\n  - SciAm Howlett2026e, 27 Oct: the HTML title differs from the displayed headline.\n  - SciAm Howlett2026h, 22 Oct: covers the 100-agent Euler squad, the 10,000 agents fed the Euler proof, and the loophole. It has nothing on base-model strength, in-group messaging, distillation or Lean/paper mismatch.\n  - KITP news page, 3 Nov: no release announced.\n  - Hexagon 2610.00506v1: 316 pp, \"Primarily AI-generated text\", flowed Wilson loops along nM^k.\n- **Not directly readable:** the openai.com posts OpenAI2026g and OpenAI2026p return HTTP 403. Search snippets confirm both titles, and the 8 Sep date for 2026g.\n- **Library notes:** I checked claim support against notes 02, 03, 05 and 11.\n\n**Checks out with no issues:** Jaffe2000, Streater1964, Osterwalder1973, Osterwalder1975, Douglas2004 (content), Balaban1984a, Balaban1987, Balaban1988d, Balaban1989b, Balaban1989c (metadata), Magnen1993, Douglas2026f, OpenAI2026c, Bastounis2026 (metadata; its use for \"lemmas that differ\" is supported), Constantin2026c (metadata), Douglas2026e, Douglas2026d, KITP2026b and Woit2026d. The OS I/II description (E0–E4 on S_0, wrong lemma, E0′ with σ_n ≤ α(n!)^β) is accurate. The Bałaban page total of about 400 pp checks out (399 pp over 12 papers).\n\n**\"As of 6 November 2026 none of this material is public\":** consistent with the sources. The KITP page shows no release, Woit's latest update shows none, and the OpenAI org has no new repo after 2026-10-21.",
+        "findings": [
+          {
+            "location": "Sec. 1, para 'The 2026 situation': \"is disputed~\\cite{Constantin2026c,Bastounis2026}\"",
+            "problem": "Misattributed citation: neither cited paper disputes the scope of OpenAI's result relative to Fefferman's problem statement.\n- Bastounis–Circelli–Hansen argue that the Lean proof does not correspond to the natural-language proof, through mismatched intermediate lemmas. They do not discuss the forced/unforced scope, and note 03 records that they do not claim the headline theorem is wrong.\n- Constantin–Ignatova–Vicol prove a conditional regularity result: constructions with OpenAI's features (i) and (ii) cannot have a real-analytic force. That is a technical limitation of the method, not a dispute about Fefferman's statement.\n- The scope dispute is documented in press: SciAm, 21 Sep 2026 (library key Howlett2026b).",
+            "severity": "critical",
+            "evidence": "- arXiv API, 2610.08144 abstract: \"we show that the formalised Lean proof does not correspond to the NL proof\". It says nothing about scope or forcing.\n- arXiv API, 2609.20803 abstract: \"the force can neither vanish identically near the singular point, nor be real analytic\".\n- library/notes/03-openai-navier-stokes-method.md:636: \"they do not claim the NL proof or the headline Lean theorem is wrong\".\n- https://www.scientificamerican.com/article/did-openai-solve-the-wrong-navier-stokes-problem/ (Howlett, 21 Sep 2026) is the article that frames the scope dispute. It also reports CIV's result.\n- library/references.bib has the entry Howlett2026b. make_refs.py picks up any newly cited library key automatically.",
+            "fix": "Replace \"the scope of that result relative to Fefferman's problem statement~\\cite{Fefferman2000} is disputed~\\cite{Constantin2026c,Bastounis2026}.\" with:\n\"the scope of that result relative to Fefferman's problem statement~\\cite{Fefferman2000} is disputed, because it uses the forced alternative~\\cite{Howlett2026b}. Constantin, Ignatova and Vicol show that constructions with its key features cannot have a real-analytic force~\\cite{Constantin2026c}, and Bastounis, Circelli and Hansen show that its Lean proof does not follow the paper's argument~\\cite{Bastounis2026}.\""
+          },
+          {
+            "location": "Sec. 6.3 'AI operating model': \"Reports also stress the dominance of base-model strength\"",
+            "problem": "Unsupported by the cited sources.\n- None of OpenAI2026g, Howlett2026h, Bastounis2026 or Constantin2026c says that base-model strength dominated multi-agent organisation. The source for that claim is Noam Brown on the Dwarkesh Podcast (library key Patel2026), which is not cited.\n- Howlett2026h supports only the Euler seeding and the 10,000-agent swarm. It does not cover in-group messaging, distillation between groups or the formalization stage.\n- The in-group messaging and Codex distillation details come from OpenAI2026g, which returned HTTP 403 and was never read; note 03 tags them [O], from snippets and press.\n- The separate formalization stage is documented in the repository metadata (OpenAI2026k), which is not cited here.\n- Constantin2026c is a mathematics paper and does not \"stress risks\".",
+            "severity": "major",
+            "evidence": "- WebFetch of the Howlett2026h URL (22 Oct 2026): it \"does not compare these factors and does not mention Noam Brown\"; it gives no groups, no messaging within groups and no Codex consolidation.\n- WebFetch of https://dwarkesh.com/p/noam-brown (17 Sep 2026): \"I wouldn't even attribute 10% of the credit to multi-agent.\"\n- library/notes/03-openai-navier-stokes-method.md:36, 125, 241, 250: base-model credit comes from Brown; the blog content is [O]; formalization.yaml names GPT-6 Astra/Codex.\n- library/references.bib:5959 has the entry Patel2026.",
+            "fix": "Replace the two sentences with:\n\"That swarm reportedly used groups of agents with in-group messaging, a seeding stage from an Euler result, consolidation of insights across groups, and a separate formalization stage~\\cite{OpenAI2026g,Howlett2026h,OpenAI2026k}. OpenAI researchers credit base-model strength over multi-agent organisation~\\cite{Patel2026}, and critics have documented the risks of scope loopholes~\\cite{Howlett2026b,Constantin2026c} and of Lean/paper drift~\\cite{Bastounis2026}.\""
+          },
+          {
+            "location": "Sec. 2.3, Table 1 row: \"4D existence, compact simple $G$ & \\textbf{Claimed} by OpenAI\"",
+            "problem": "Overstatement. No public source says that OpenAI's claim covers every compact simple G. The announcement names no gauge group: it mentions \"Yang–Mills\", QCD and a \"unified completion\". The committee does not state the group either. Note 02 lists \"Which G\" as Unknown, and QRC2026 (one of the paper's own sources) says this is unsettled. The row attributes the full Clay quantifier to OpenAI's claim.",
+            "severity": "major",
+            "evidence": "- library/notes/02-openai-ym-claim.md:110, 348 (\"Which G (all compact simple vs SU(N) vs SU(3)): Unknown\").\n- WebFetch of Woit p=15948: \"No specific group is named.\"\n- WebFetch of the QRC2026 page: the article \"does not settle whether the result covers every compact simple gauge group\".\n- The committee PDFs (ym1/ym2 text extraction) name no group for pure Yang–Mills.",
+            "fix": "Replace the row with:\n\"4D existence (pure Yang--Mills; gauge group(s) not stated publicly) & \\textbf{Claimed} by OpenAI (unreleased; under committee review)~\\cite{OpenAI2026p,Douglas2026e,Douglas2026d}. \\\\\""
+          },
+          {
+            "location": "Sec. 2.3, Table 1 row: \"Open by every account, including OpenAI's and the committee's\"",
+            "problem": "Mild overstatement, and the claim is attributed without a source. OpenAI's announcement does not mention the mass gap at all, so OpenAI has not stated that the gap is open; it simply does not claim it. Only the committee is cited.",
+            "severity": "minor",
+            "evidence": "- WebFetch of Woit p=15948: the announcement \"does not mention\" the mass gap.\n- library/notes/02-openai-ym-claim.md:29: \"Sources disagree on whether OpenAI's post mentions the gap at all.\"\n- Committee statement 1 (ym1 text): \"confinement and the mass gap remain very important open challenges\".",
+            "fix": "Replace the row with:\n\"4D mass gap & \\textbf{Open}: not claimed by OpenAI~\\cite{OpenAI2026p,Woit2026d}; the committee states it remains open~\\cite{Douglas2026e}. \\\\\""
+          },
+          {
+            "location": "Sec. 1, para 'The 2026 situation': \"The natural-language proof (reported as 1{,}147 pages)\"",
+            "problem": "The sentence gives \"the natural-language proof\" of pure Yang–Mills existence a length of 1,147 pages. The committee actually refers to \"the full 1147-page LLM proofs\" (plural) and \"the OpenAI manuscripts\", in a statement about a proof \"including coupling to fermions\". Whether the 1,147 pages cover Yang–Mills only, Yang–Mills plus QCD, or all three theories is not stated. The figure is also the committee's own, not a press report.",
+            "severity": "minor",
+            "evidence": "- Committee statement 1 (ym1 text): \"we will provide our assessment together with the full 1147-page LLM proofs\" and \"The length and complexity of the OpenAI manuscripts are formidable\".\n- library/notes/02-openai-ym-claim.md:187: \"Its scope is unstated: it could be YM only, YM plus QCD, or all three theories.\"",
+            "fix": "Replace \"The natural-language proof (reported as 1{,}147 pages) and its Lean formalization are held by\" with:\n\"The natural-language manuscripts (``the full 1147-page LLM proofs'', whose scope the committee does not specify) and the Lean formalization of pure Yang--Mills existence are held by\""
+          },
+          {
+            "location": "refs.bib OpenAI2026p (rendered in the bibliography) and Sec. 8 'Limitations': \"OpenAI's announcement page was not directly accessible\"",
+            "problem": "1. An internal workflow note is printed in the published bibliography: \"UNVERIFIED in note(s) 01, 03, 04, 11; verified in others.\"\n2. howpublished gives only \"Oct 2026\"; the post is dated 26 Oct 2026.\n3. The Limitations section mentions only one inaccessible OpenAI page. The Navier–Stokes blog (OpenAI2026g) was also never read (HTTP 403), yet the paper cites it for details of the swarm design.",
+            "severity": "minor",
+            "evidence": "- paper/main.bbl:145 prints \"UNVERIFIED in note(s) 01, 03, 04, 11; verified in others.\"\n- curl on both openai.com URLs returned 403 on 2026-11-06.\n- library/notes/03-openai-navier-stokes-method.md:7, 125: the OpenAI NS blog is \"403 to fetch; via search snippets and press\".\n- Woit and QRC date the YM post 26 Oct.",
+            "fix": "In refs.bib OpenAI2026p, set:\n- howpublished = {Blog post, 26 Oct 2026}\n- note = {Not retrievable by the author's tools (HTTP 403); wording as quoted in secondary sources}\n\nIn Limitations, replace \"OpenAI's announcement page was not directly accessible during the research\" with:\n\"OpenAI's blog posts~\\cite{OpenAI2026g,OpenAI2026p} were not directly accessible during the research\"\n\nAlso fix make_refs.py so that library-internal note fields are not copied into refs.bib."
+          },
+          {
+            "location": "Sec. 1: \"proves its headline theorem through lemmas that differ from the paper's~\\cite{Bastounis2026}\"",
+            "problem": "The cited fact is correct, but it is offered as evidence that \"the statement is where errors of meaning concentrate\". Bastounis et al. document drift in the proof: the intermediate lemmas differ, while the headline statement (taken from formal-conjectures) is not disputed. Their example shows that a Lean certificate does not certify the paper's argument. It does not show a statement-level error, so as written the example does not support the claim it is attached to.",
+            "severity": "minor",
+            "evidence": "- arXiv 2610.08144 abstract: \"the formalised Lean proof does not correspond to the NL proof\".\n- library/notes/03-openai-navier-stokes-method.md:34, 636: \"certifies the theorem, not the natural-language argument\"; the authors \"do not claim ... the headline Lean theorem is wrong\".",
+            "fix": "Replace \"the Navier--Stokes development proves its headline theorem through lemmas that differ from the paper's~\\cite{Bastounis2026};\" with:\n\"the Navier--Stokes Lean development reaches its headline theorem through intermediate lemmas that differ from the paper's, so it certifies the theorem but not the paper's argument~\\cite{Bastounis2026};\""
+          },
+          {
+            "location": "refs.bib Aronow2026 (url field)",
+            "problem": "The primary URL is the GitHub repository, which now describes itself as dated and kept for historical reasons only. The current manuscripts are the Hexagon preprints, and the bib places that URL in a non-standard \"Additional URLs\" note.",
+            "severity": "minor",
+            "evidence": "- gh api repos/pmaronow/3d-ym-torus/readme: \"This repository is now dated and is here for historical reasons only. The latest version ... was posted at Hexagon math in five parts\".\n- WebFetch of https://hexagonmath.org/2610.00506v1: submitted 23 Oct, v1 26 Oct 2026, 316 pp, labelled \"Primarily AI-generated text\".",
+            "fix": "In refs.bib Aronow2026, set:\n- howpublished = {Hexagon preprints hexagon:2610.00506, 2610.00509--2610.00512 (v1, 23--26 Oct 2026); primarily AI-generated}\n- url = {https://hexagonmath.org/2610.00506v1}\n- note = {Earlier version: \\url{https://github.com/pmaronow/3d-ym-torus}}"
+          },
+          {
+            "location": "refs.bib Sussman2026; Sec. 1: \"Sussman and Alp\\\"oge have published AI-generated manuscripts\"",
+            "problem": "1. The bib title adds an editorial subtitle (\"Claude-driven continuation of Balaban's programme (QED3, YM3 manuscripts; unfinished YM4)\") that is not the repository's title.\n2. In \"public from ~6 Oct 2026\" the \"~\" renders as a non-breaking space, so the \"approximately\" is lost (main.bbl:197).\n3. In the text, \"published\" overstates the status of an unvetted work-in-progress repository.",
+            "severity": "minor",
+            "evidence": "- gh api repos/ethanwsussman/Yang--Mills-LLM-experiment: name \"Yang--Mills-LLM-experiment\", created 2026-10-06T09:51Z.\n- README disclaimer: \"work-in-progress, written largely by LLM. Its content has not been satisfactorily vetted.\"\n- paper/main.bbl:195-197.",
+            "fix": "In refs.bib Sussman2026, set:\n- title = {{Yang--Mills-LLM-experiment}}\n- howpublished = {GitHub repository, created 6 Oct 2026, accessed 6 Nov 2026}\n- note = {LLM-written QED$_3$ and YM$_3$ manuscripts; unfinished YM$_4$}\n\nIn the text, replace \"have published AI-generated manuscripts\" with \"have posted AI-generated, self-described tentative manuscripts\"."
+          },
+          {
+            "location": "refs.bib Balaban1989b, Balaban1989c vs Balaban1984a/1987/1988d (author field)",
+            "problem": "The author name is spelled inconsistently. Three entries use \"Bałaban, T.\" and two use \"Balaban, T.\", so the bibliography shows the same author two ways. natbib also computes the 1984a/1984b-style label suffixes separately for each spelling.",
+            "severity": "minor",
+            "evidence": "- paper/refs.bib lines 44, 52, 60 (Bałaban) vs 68, 76 (Balaban).\n- main.bbl label \"Bałaban(1984{\\natexlab{a}})\".\n- Crossref itself is inconsistent: BF01215223 is \"Bałaban\" and BF01257412 is \"Balaban\".",
+            "fix": "Set author = {Ba{\\l}aban, T.} in Balaban1989b and Balaban1989c, and in every other Bałaban entry."
+          },
+          {
+            "location": "refs.bib Howlett2026e, OpenAI2026k, Fefferman2000, Douglas2004, KITP2026b, QRC2026",
+            "problem": "Metadata nits:\n- Howlett2026e: uses the page's HTML title instead of the displayed headline.\n- OpenAI2026k: the title paraphrases the repository description.\n- Fefferman2000: no venue.\n- Douglas2004: howpublished uses ASCII quotes, which render as two closing quotes.\n- KITP2026b: no date.\n- QRC2026: a secondary aggregator. It contains at least one claim the library's verifier could not support (that OpenAI \"will not seek the prize\" for YM), and it adds nothing beyond Woit2026d, Howlett2026e and the committee statements.",
+            "severity": "minor",
+            "evidence": "- SciAm page: displayed headline \"OpenAI just scooped mathematicians' work on another million-dollar problem\".\n- gh api: description \"Lean certificates accompanying Navier-Stokes and Euler results\".\n- Bastounis ref [23]: Fefferman, in The Millennium Prize Problems, pp. 57–67.\n- main.bbl:38.\n- KITP page dated November 3, 2026.\n- library/notes/02-openai-ym-claim.md:507 (no-prize statement concerned NS, not YM).",
+            "fix": "- Howlett2026e: title = {{OpenAI just scooped mathematicians' work on another million-dollar problem}}, howpublished = {Scientific American, 27 Oct 2026}.\n- OpenAI2026k: title = {{openai/NavierStokesAndEuler: Lean certificates accompanying Navier-Stokes and Euler results}}.\n- Fefferman2000: howpublished = {Clay Mathematics Institute problem description (2000); in The Millennium Prize Problems, CMI/AMS 2006, 57--67}.\n- Douglas2004: howpublished = {Clay Mathematics Institute, April 2004 (``Millenium'' as in the original)}.\n- KITP2026b: howpublished = {KITP news page, 3 Nov 2026}.\n- QRC2026: consider removing it from \\cite{OpenAI2026p,Woit2026d,QRC2026,Howlett2026e}."
+          }
+        ]
+      }
+    },
+    {
+      "task": "cite-2",
+      "result": {
+        "checked": "Scope: all 28 assigned keys. I checked each one in three ways: (a) its bib metadata against Crossref, the arXiv API or the GitHub API; (b) every sentence in main.tex that cites it; (c) the library notes, plus the primary source where one was reachable.\n\nMETADATA CONFIRMED CORRECT (Crossref JSON: title, authors, venue, volume, pages, year):\n- Glimm1987: 2nd ed., Springer NY 1987, ISBN 9780387964775.\n- Haag1996.\n- Gross1973 (PRL 30:1343–1346) and Politzer1973 (PRL 30:1346–1349).\n- Driver1989: CMP 123:575–616.\n- Gross1989: Ann. Phys. 194:65–112.\n- Sengupta1997: Mem. AMS 126 no. 600.\n- Levy2003: Mem. AMS 166 no. 790.\n- Chevyrev2019: CMP 372:1027–1058.\n- Chandra2022: Publ. IHES 136:1–147.\n- Chevyrev2026b: CPAM 79(8):1973–2102.\n- Osterwalder1978: Ann. Phys. 110:440–471.\n- Seiler1982: LNP 159.\n- Shen2023: CMP 400:805–851.\n- Adhikari2025: Ann. Probab. 53:140–174.\n- Moura2021: CADE-28, LNCS, pp. 625–635.\n- Mathlib2020: CPP 2020, pp. 367–381.\n- Wilson1974: PRD 10:2445–2459.\n- Collins1977: PRD 16:438–449.\n- Caswell1974: PRL 33:244–246.\n- Jones1974: NPB 75:531–538.\n- Feldman1976: Ann. Phys. 97:80–135.\n\narXiv API, titles, authors and journal references all match: math/0101239, 1808.09196, 2006.04987, 2302.12160, 2204.12737, 2202.10375, 1910.09336, and 2610.20573 (Mei and Douglas, v1 dated 14 Oct 2026).\n\nGitHub API:\n- lean-dojo/LeanMillenniumPrizeProblems exists. Its README marks the Yang–Mills statement \"Statement incomplete, not a valid target\" and says it \"can therefore be satisfied by a two-dimensional toy model\". The sentence citing it is supported on that point.\n- google-deepmind/formal-conjectures: the main tree (commit 2055e5a, 6 Nov 2026) has Millennium/{BSD, NavierStokes, Poincare, PvsNP, RiemannHypothesis} and no Yang–Mills file. However, PR #7636, which adds one, is open.\n- mrdouglasny/OSforGFF: README lists authors Cherkis, Douglas, Hoback, Mei and Nissim, and says \"Version 3.2 ... August 2026\". This matches the bib.\n- mrdouglasny/lgt: authors Douglas and Rajasekaran. Matches.\n- xiyin137/OSreconstruction exists, but its authorship is broader than the bib states (see findings).\n\nCONTENT CHECKED AGAINST SOURCES AND NOTES, NO PROBLEM FOUND:\n- Gross1973 and Politzer1973 for asymptotic freedom and b0 = 11N/(3(4π)²); Caswell1974 and Jones1974 for b1 = 34N²/(3(4π)⁴). I also checked that the asymptotic-scaling expression is consistent with them.\n- Collins1977 for the RG-invariant trace-anomaly operator (β/2g)F².\n- Wilson1974 for the action.\n- Osterwalder1978 and Seiler1982 for reflection positivity at all β, and for the area law and gap at small β (note 09:204).\n- Shen2023 for the strong-coupling gap (arXiv abstract).\n- Adhikari2025 for exponential decay at weak coupling with finite groups. The paper's own introduction frames this as a mass gap.\n- The 2D construction list and the Langevin/universality citations.\n- Glimm1987 and Feldman1976 for superrenormalizable constructions.\n- Glimm1987's OS1 regularity axiom, against note 01 §2.6.\n- Moura2021 and Mathlib2020 for the toolchain. lean-toolchain is v4.36.0-rc2, and the Mathlib revision is 9d581df.\n\nNone of the 28 keys carries an UNVERIFIED flag.\n\nEvidence files:\n- <scratchpad>/cr/*.json\n- the same scratchpad, citeverify_B28/ (ax.xml, the READMEs, fc_tree.json, mei/mei.txt)\n\nRead-only: no project file was modified.",
+        "findings": [
+          {
+            "location": "Sec. 1, 'Why a formal statement matters now': \"a public candidate Lean statement of the Yang--Mills problem is self-described as incomplete\"",
+            "problem": "The paper omits a directly overlapping earlier public candidate Lean statement: Rémondière's ClayYM v1.1.0, deposited on Zenodo on 2026-10-25. That statement already contains these elements, which this paper presents as its own contributions:\n- a Wilson-lattice-limit variant;\n- OS axioms;\n- field content consisting of the 21 components of Tr F_{μν}F_{ρσ};\n- a short-distance 'Yang–Mills fingerprint' ⟨θθ⟩ ~ κ/(x⁸ log² x), with the −b1/b0² correction and the same Caswell and Jones references;\n- a mass gap that covers only the C-even sector (its Limitation 3, which matches row 1 of this paper's Table 2);\n- Claude-written code and adversarial review by Claude agents.\nThe paper's survey sentence leaves the reader thinking the only public candidate statement is lean-dojo's. The abstract and Contributions then claim the 21-component clause and the 'asymptotic-freedom fingerprint' without crediting the earlier work. The author's own library had already found and verified this prior work.",
+            "severity": "critical",
+            "fix": "1. Replace lines 108–115 with:\n\nA Lean proof certifies only the theorem that was stated, and experience in 2026 shows that the statement is where errors of meaning concentrate. The Navier--Stokes development proves its headline theorem through lemmas that differ from the paper's~\\cite{Bastounis2026}. The maintainers of the lean-dojo collection mark its Yang--Mills statement as incomplete and ``not a valid target'' and note that a two-dimensional toy model satisfies it~\\cite{Leandojo2026}. An earlier AI-written candidate statement by R\\'emondi\\`ere~\\cite{Remondiere2026} already uses the 21 components of $\\tr F_{\\mu\\nu}F_{\\kappa\\lambda}$ as field content, a Wilson-limit clause and a trace-anomaly short-distance fingerprint, and concedes that its gap covers only the C-even sector they generate. As of 6 November 2026, the formal-conjectures collection~\\cite{DeepMind2026} contains no merged Yang--Mills statement (library notes 01, 03 and 04). The shepherding committee lists statement fidelity as its first task~\\cite{Douglas2026e}.\n\n2. In the ShortDistanceAF paragraph, add:\n\nA closely related fingerprint, $\\langle\\theta\\theta\\rangle\\sim\\kappa/(x^8\\log^2x)$ with $\\kappa=3\\dim G/\\pi^4$ and a $-b_1/b_0^2$ correction, was proposed earlier in~\\cite{Remondiere2026}. Our clause fixes no constant.\n\n3. Update the library entry (make_refs.py reads library/references.bib):\n\n@misc{Remondiere2026, author={R\\'emondi\\`ere, K\\'evin}, title={{ClayYM: a candidate Lean 4 statement of the Yang--Mills existence and mass gap problem, with compiled guards against fake models}}, howpublished={Zenodo, version 1.1.0, 25 Oct 2026; code and text written by Claude agents under the author's direction}, year={2026}, doi={10.5281/zenodo.23650415}, url={https://github.com/AIdevsmartdata/yang-mills-lean-statement}}",
+            "evidence": "- Zenodo API https://zenodo.org/api/records/23650415 returns: doi 10.5281/zenodo.23650415; title 'ClayYM: a candidate Lean 4 statement of the Yang–Mills existence and mass gap problem...'; date 2026-10-25; version 1.1.0; creator 'Rémondière, Kévin'. Its description lists a Wilson lattice-limit variant, OS axioms, mass gap, and a trace-anomaly coefficient κ = 3 dim G/π⁴ with the −102/121 correction.\n- GitHub README of AIdevsmartdata/yang-mills-lean-statement: lines 32–34 (21 components, the fingerprint ⟨θθ⟩ ~ κ/(x⁸ log² x)), line 44 (Limitation 3: 'the gap covers only the sector generated by these 21 components (C-even)'), lines 165 and 172 (Claude-written; adversarial review by Claude reviewers).\n- library/notes/01-problem-definition.md:53 and :428 record this work as verified on 2026-11-05.\n- library/references.bib has an entry @misc{Remondiere2026} (about line 6180).\n- The key is absent from main.tex and refs.bib (grep)."
+          },
+          {
+            "location": "Sec. 1: \"Experience with AI-generated formalizations in 2026 shows that the statement is where\"",
+            "problem": "The colon-list presents the lean-dojo Yang–Mills statement (Leandojo2026) as an example of an AI-generated formalization. Nothing in the source supports that.\n- The lean-dojo repository was created in March 2025.\n- The Yang–Mills file's commit history is by a human author.\n- The README makes no statement that the work is AI-generated.\n- The September 2026 defect review it records credits human contributors, including Kevin Buzzard.\nThe formal-conjectures item (DeepMind2026) is also not an example of an 'AI-generated formalization' at all; it is an absence. The framing therefore misattributes the nature of the cited work.",
+            "severity": "major",
+            "fix": "Drop 'AI-generated' from the lead clause and describe each item accurately. Use the replacement paragraph given in the critical finding above. Its opening sentence is: \"A Lean proof certifies only the theorem that was stated, and experience in 2026 shows that the statement is where errors of meaning concentrate.\" It then describes lean-dojo as a maintainer-flagged incomplete statement, without calling it AI-generated.",
+            "evidence": "- gh api repos/lean-dojo/LeanMillenniumPrizeProblems gives created_at 2025-03-14.\n- gh api .../commits?path=Problems/YangMills/Millennium.lean shows commits from 2025-03-15 to 2026-09-07 by 'robert' / 'Robert joseph george' and 'Colin Bundschu'.\n- The README (lines 54–75) says 'A review in September 2026 (with an independent contribution by Kevin Buzzard, PR #9)' and contains no AI-authorship statement."
+          },
+          {
+            "location": "Table 1, row 'Lattice mass gap': \"Proved only at strong coupling ... or for finite groups\"",
+            "problem": "The row is overbroad and, as worded, false. Lattice mass gaps are also proved at weak coupling for continuous groups in lower dimensions:\n- 3D U(1) (Villain action) is gapped and confined at all couplings (Göpfert–Mack, which the paper itself cites in Sec. 5 as Gopfert1982).\n- In d=2, every lattice gauge theory is gapped and has an area law.\nThe cited works (Osterwalder1978, Seiler1982, Shen2023, Adhikari2025) support only the 4D statement for continuous non-Abelian G. The library notes say so explicitly, so the row also contradicts them.",
+            "severity": "major",
+            "fix": "4D lattice mass gap, continuous non-Abelian $G$ & Proved only at strong coupling~\\cite{Osterwalder1978,Seiler1982,Shen2023}; never in the weak-coupling continuum regime. (Finite $G$: gap at weak coupling~\\cite{Adhikari2025}; 3D $U(1)$: gap and confinement at all couplings~\\cite{Gopfert1982}.) \\\\",
+            "evidence": "- library/notes/09-mass-gap-mechanisms.md:113–117: 'Finite-group LGT at weak coupling is gapped... In d=2 every lattice gauge theory has an area law... 3D U(1) is both [gapped and confined] [Göpfert–Mack 31]'.\n- library/notes/07-lattice-rigorous-results.md:170 (Göpfert–Mack: all β).\n- main.tex:533 cites Gopfert1982 for 3D U(1)."
+          },
+          {
+            "location": "Sec. 4.1: \"This follows the mechanical-verification-first approach advocated in~\\cite{Mei2026}.\"",
+            "problem": "This mischaracterizes both the source and the method.\n- Mei and Douglas propose combining LLM semantic review with mechanical numerical checks and mechanical vacuity checks. They argue that LLM judges miss errors these mechanical checks catch. They do not advocate a 'mechanical-verification-first' ordering.\n- The review in this paper is LLM reviewers followed by LLM verifiers, i.e. the LLM-judge pattern that Mei and Douglas go beyond. Its only mechanical element is the compiling of exploit files. It runs no numerical or automated vacuity scan.\n- The review workflow script never references Mei2026, so 'follows' implies a derivation that is not documented.",
+            "severity": "major",
+            "fix": "Compiling exploits in Lean, together with the non-vacuity witnesses of Section~\\ref{sec:checked}, is in the spirit of the mechanical vacuity checks of Mei and Douglas~\\cite{Mei2026}. They combine LLM-based semantic review with mechanical numerical and vacuity checks, and report that LLM judges miss errors those checks catch. Our verification of findings, by contrast, was LLM-judged.",
+            "evidence": "- arXiv API, 2610.20573v2 abstract: 'our method combines LLM-based semantic review with mechanical numerical and vacuity checks, providing checkable feedback and detecting errors missed by LLM judges.'\n- The PDF (§1) says the method 'complements the ambiguity and arbitrariness of an LLM judge's verdicts'.\n- dev/workflows/ym-statement-review-wf_6798a78b-95c.js:39–67 shows LLM verifier agents with a 'refuted' boolean, and grep finds no reference to Mei or 2610.20573."
+          },
+          {
+            "location": "Sec. 1: \"contains no Yang--Mills statement (see also the discussion in library note~01)\"",
+            "problem": "There are two problems.\n1. The claim is true only for the merged main branch. An open pull request (#7636, 26 Oct 2026) proposes FormalConjectures/Millennium/YangMills.lean, and issue #2365 tracks the same statement. The sentence should be dated and qualified.\n2. The pointer is wrong. Library note 01 never discusses formal-conjectures; the check that it lacks a Yang–Mills file is in notes 03 and 04. The bib keywords for DeepMind2026 are {03, 04}.",
+            "severity": "minor",
+            "fix": "the formal-conjectures collection~\\cite{DeepMind2026} contains no merged Yang--Mills statement as of 6 November 2026 (commit \\lean{2055e5a}; an open pull request proposes one; library notes 03 and 04)",
+            "evidence": "- gh api repos/google-deepmind/formal-conjectures/git/trees/main?recursive=1 (2,400 entries, not truncated): Millennium/ contains only BSD, NavierStokes, Poincare, PvsNP and RiemannHypothesis.\n- gh api .../issues/7636: state open, created 2026-10-26, title 'feat(millennium): formalise 4D Yang-Mills Existence and Mass Gap conjecture'.\n- library/notes/03-openai-navier-stokes-method.md:374 and :651; library/notes/04-openai-github-proofs.md:426 and :582.\n- grep finds no 'formal-conjectures' in note 01."
+          },
+          {
+            "location": "refs.bib Yin2026 (cited Sec. 4.1: \"public formalizations~\\cite{Cherkis2026,Yin2026,Douglas2026c}\")",
+            "problem": "The author attribution is incomplete.\n- The README names no authors.\n- The GitHub contributors are xiyin137 (Xi Yin, 606 commits), mrdouglasny (Michael R. Douglas, 391), annamei1 (Anna Mei, 81) and eric-vergo (21).\n- The current os-reconstruction package was ported by Douglas.\n- The library note itself says 'authorship not independently confirmed'.\nIn addition, howpublished repeats the title verbatim, inside literal quotes.",
+            "severity": "minor",
+            "fix": "@misc{Yin2026, author = {Yin, Xi and others}, title = {{xiyin137/OSreconstruction: Lean 4 formalization of the Osterwalder--Schrader reconstruction theorem}}, howpublished = {GitHub repository (contributors include X.~Yin, M.~R. Douglas, A.~Mei), commit cf0904e, 3 Nov 2026}, year = {2026}, url = {https://github.com/xiyin137/OSreconstruction}}",
+            "evidence": "- gh api repos/xiyin137/OSreconstruction/contributors gives xiyin137 606, mrdouglasny 391, annamei1 81, eric-vergo 21.\n- gh api users/xiyin137 gives name 'Xi Yin'.\n- Recent commits on os-reconstruction/ are by 'Michael R Douglas' (2026-11-01 and 11-02).\n- library/notes/08-constructive-qft-and-renormalization-tools.md:721.\n- main.bbl renders '\"Lean 4 formalization of the Osterwalder-Schrader reconstruction theorem\", 2026'."
+          },
+          {
+            "location": "refs.bib entries Leandojo2026, DeepMind2026, Cherkis2026, Douglas2026c",
+            "problem": "These are living repositories cited for time-sensitive claims ('self-described as incomplete', 'contains no Yang–Mills statement'), but the entries pin no commit or access date. DeepMind2026 also has a citable paper, which is the canonical reference, and its 'Google DeepMind et al' author string is non-standard. Douglas2026c's howpublished repeats the title.",
+            "severity": "minor",
+            "fix": "Add a commit and access date to each:\n- Leandojo2026: howpublished = {GitHub repository, commit 603053d (10 Sep 2026), accessed 5 Nov 2026}\n- Cherkis2026: howpublished = {Lean 4 repository, v3.2 (Aug 2026), commit fef84a8}\n- Douglas2026c: howpublished = {GitHub repository, commit b8793cc (22 Jul 2026)}\n- DeepMind2026: @misc{DeepMind2026, author={Firsching, Moritz and Lezeau, Paul and Mercuri, Salvatore and others}, title={{Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics}}, howpublished={arXiv:2605.13171; repository google-deepmind/formal-conjectures, commit 2055e5a (6 Nov 2026)}, year={2026}, eprint={2605.13171}, archivePrefix={arXiv}, url={https://github.com/google-deepmind/formal-conjectures}}",
+            "evidence": "- The formal-conjectures README badge links arXiv:2605.13171. The arXiv API returns 'Formal Conjectures: An Open and Evolving Benchmark for Verified Discovery in Mathematics', by Firsching, Lezeau, Mercuri, Horváth, Dillies, Sönne, Wieser, Zhang, Hubert, Agüera y Arcas and Kohli, 2026-05-13.\n- Latest commits via gh api: lean-dojo 603053d, OSforGFF fef84a8, lgt b8793cc, formal-conjectures 2055e5a."
+          },
+          {
+            "location": "refs.bib Moura2021 and Mathlib2020 (Sec. 3: \"a Lean~4~\\cite{Moura2021} project built on Mathlib~\\cite{Mathlib2020}\")",
+            "problem": "Both are conference papers but are typed @article, with the venue in the journal field. The result renders as 'CADE-28 (LNCS), 2021, 2021' and 'CPP 2020, 2020'. The entries also lack the LNCS volume and the page ranges.",
+            "severity": "minor",
+            "fix": "- @inproceedings{Moura2021, author={de Moura, Leonardo and Ullrich, Sebastian}, title={{The Lean 4 Theorem Prover and Programming Language}}, booktitle={Automated Deduction -- CADE 28}, series={Lecture Notes in Computer Science}, volume={12699}, pages={625--635}, publisher={Springer}, year={2021}, doi={10.1007/978-3-030-79876-5_37}}\n- @inproceedings{Mathlib2020, author={{The mathlib Community}}, title={{The Lean Mathematical Library}}, booktitle={Proc. 9th ACM SIGPLAN Int. Conf. on Certified Programs and Proofs (CPP 2020)}, pages={367--381}, publisher={ACM}, year={2020}, doi={10.1145/3372885.3373824}, eprint={1910.09336}, archivePrefix={arXiv}}",
+            "evidence": "- Crossref 10.1007/978-3-030-79876-5_37: type book-chapter; container 'Lecture Notes in Computer Science' / 'Automated Deduction – CADE 28'; pages 625–635; ISBN 9783030798758.\n- Crossref 10.1145/3372885.3373824: proceedings-article, CPP 2020, pages 367–381.\n- main.bbl renders '\\emph{CADE-28 (LNCS), 2021}, 2021.'"
+          },
+          {
+            "location": "refs.bib, library-derived entries (e.g. Gross1973 \"journal = {PRL 30 (1973) 1343}\")",
+            "problem": "Many assigned entries pack volume, year and pages into the journal field (or the year into publisher), so unsrtnat prints the year twice and gives no proper page range. Affected: Gross1973, Politzer1973, Driver1989, Gross1989, Sengupta1997, Levy2003, Chevyrev2019, Chandra2022, Chevyrev2026b, Osterwalder1978, Shen2023, Adhikari2025, Wilson1974, Feldman1976, Glimm1987, Haag1996 and Seiler1982. Examples:\n- 'PRL 30 (1973) 1343, 1973.'\n- 'CPAM 79 (2026) no. 8, 1973–2102, 2026a.'\n- '2nd ed., Springer 1996, 1996.'\nThe Gross1973 and Politzer1973 entries also give only first pages. The metadata values themselves are all correct.",
+            "severity": "minor",
+            "fix": "Split the fields, for example:\n- Gross1973: journal={Phys. Rev. Lett.}, volume={30}, number={26}, pages={1343--1346}\n- Politzer1973: journal={Phys. Rev. Lett.}, volume={30}, number={26}, pages={1346--1349}\n- Chevyrev2026b: journal={Comm. Pure Appl. Math.}, volume={79}, number={8}, pages={1973--2102}\n- Glimm1987: publisher={Springer}, edition={2nd}\n- Haag1996: publisher={Springer}, edition={2nd}\n- Seiler1982: series={Lecture Notes in Physics}, volume={159}, publisher={Springer}\nApply the same split to the remaining listed keys, using the Crossref volume and pages values.",
+            "evidence": "- paper/main.bbl entries for Gross1973, Chevyrev2026b, Haag1996 and Seiler1982 show the duplicated year.\n- Crossref gives PRL 30(26):1343–1346 and 1346–1349, and CPAM 79(8):1973–2102."
+          }
+        ]
+      }
+    },
+    {
+      "task": "cite-3",
+      "result": {
+        "checked": "I checked all 28 keys against their sources. arXiv API (export.arxiv.org): 1907.05474, 1403.7244, 1912.07973, 1108.1335, 1212.5562, 1304.0705, 2204.07201, 1502.07719, 1608.04379, 1610.03821, 2001.05627, 1811.09770, 2001.07453, 2509.04688, 2505.16585, 2307.06790. In every case the title, authors and date match the bib. Crossref (api.crossref.org/works/<DOI>): all 23 DOIs resolve, and authors, titles, journal, volume, pages and year match the bib for Gawedzki1985a (CMP 102:1-30), Feldman1986 (CMP 103:67-103), Bauerschmidt2019 (LNM 2242), Kotecky1986 (CMP 103:491-498), Aizenman2021 (Ann. Math. 194:163-235), Balaban1984b/1985a/1985c/1985e/1985f/1985g/1988b, Dimock2013b/2013c/2014/2022, Chatterjee2019, Basu2018, Cao2020, Chatterjee2020, Forsstrom2022b, Cao2025c (Comm. AMS 5 iss. 14:774-896, 2025-12-05) and Durhuus1980 (CMP 75:103-151). The Dimock2013a slide URL returns HTTP 200: a 6-page PDF titled \"The renormalization group according to Balaban\", J. Dimock, May 27, 2013. Crossref shows no journal version of Jafarov2016, Cao2025a or Cao2025b, so citing them as arXiv preprints is correct. None of these 28 keys carries an UNVERIFIED note in refs.bib; the only one in the file is OpenAI2026p. No key is fabricated.\n\nI then read every citing sentence (main.tex lines 475-506, all in the Research landscape section) against the abstracts and against library notes 05, 06, 07, 08, 09 and 11. These were confirmed: (1) Bałaban's ~400 pages: the 12 cited CMP papers sum to exactly 399 pp from the page ranges, matching note 05:624. (2) \"Coupling-flow paper never published\" and \"upper stability bound only\" are both on the Dimock 2013 slides, p.5. (3) The list of things absent from Bałaban's work matches note 05 §1. (4) The large-N/strong-coupling bullet (Chatterjee2019, Basu2018, Jafarov2016) is supported. (5) The finite-gauge-group bullet (Cao2020, Chatterjee2020 for Z2, Forsstrom2022b for Z_n) is supported. (6) Cao2025a and Cao2025b are genuine area-law papers. (7) Durhuus1980 as a conditional reduction of confinement to correlation decay is supported: the Cao–Nissim–Sheffield arXiv:2509.04688 abstract says area law \"directly follows\" from the DF80 mass-gap condition, and note 07:184-186 agrees. The DF80 primary abstract was not available online (Scilit: \"No abstract available\"), so this content is verified through that secondary source. (8) Kotecky1986 for cluster expansions and Bauerschmidt2019/Brydges2015a for modern RG methods are supported.\n\nProblems found: one misattributed citation (Cao2025c listed as an area-law paper); one claim attributed to Aizenman2021 that the project's own notes label as heuristic; two overstated sentences (the Gross–Neveu priority claim and the Dimock \"only re-derivation\" claim); three Dimock references that render in the PDF with no venue or identifier at all; and some minor metadata and sourcing issues. The build log shows no undefined citations.",
+        "findings": [
+          {
+            "location": "§Research landscape, Rigorous lattice results: \"Stochastic-analysis gaps at strong coupling~\\cite{Shen2023}, and area-law regimes~\\cite{Cao2025a,Cao2025b,Cao2025c}\"",
+            "problem": "The sentence cites Cao2025c (Cao–Park–Sheffield, \"Random surfaces and lattice Yang–Mills\") as an area-law result, but that paper proves no area law. It gives an exact identity that writes Wilson-loop expectations as sums over embedded planar maps, valid for every N, beta and d. This is a misattributed citation.",
+            "severity": "critical",
+            "evidence": "arXiv API 2307.06790 abstract: \"one can express Wilson loop expectations as sums over embedded planar maps ... any matrix dimension N>=1, any inverse temperature beta>0\". It does not mention area law. Crossref 10.1090/cams/59 gives the same abstract. library/notes/07-lattice-rigorous-results.md:232 files it under \"Surface sums ... This is an exact identity, not a convergence statement\". notes/09-mass-gap-mechanisms.md:228 lists it under \"Lattice, strong 't Hooft coupling\" next to Chatterjee/Basu/Jafarov. notes/11:184-185 lists it under \"Random surfaces\". By contrast, the 2505.16585 and 2509.04688 abstracts both explicitly prove area law.",
+            "fix": "Replace lines 501 and 504-505 with:\n\\item Large-$N$ and strong-coupling analyses~\\cite{Chatterjee2019,Basu2018,Jafarov2016}, and exact random-surface representations of Wilson-loop expectations~\\cite{Cao2025c}.\n...\n\\item Stochastic-analysis gaps at strong coupling~\\cite{Shen2023}, and area-law regimes~\\cite{Cao2025a,Cao2025b}."
+          },
+          {
+            "location": "§Research landscape, Constructive QFT: \"Triviality of $\\varphi^4_4$~\\cite{Aizenman2021} shows that non-triviality in four dimensions requires asymptotic freedom.\"",
+            "problem": "The sentence attributes to Aizenman–Duminil-Copin a general theorem they do not prove. They prove Gaussian scaling limits only for 4D nearest-neighbour Ising-type models and single-component lattice-cutoff lambda phi^4 models. The step from there to \"non-triviality requires asymptotic freedom\" is a heuristic that also depends on the one-loop Coleman–Gross argument. The project's own notes label it Heuristic. The section opens by promising that each claim carries its label, and this one drops the label.",
+            "severity": "critical",
+            "evidence": "Crossref 10.4007/annals.2021.194.1.3 abstract: \"scaling limits of spin fluctuations in four-dimensional Ising-type models with nearest-neighbor ferromagnetic interaction ... A similar statement is proven for the lambda phi^4 fields over R^4 with a lattice ultraviolet cutoff\". notes/08-constructive-qft-and-renormalization-tools.md:498: \"'Non-trivial 4D QFT => asymptotically free' | Heuristic: Coleman–Gross [T-pert] plus ADC [T] for phi^4\". notes/08:28 restricts the result to the \"single-component, nearest-neighbour ferromagnetic\" class and says \"not a theorem\". notes/06:189: \"a theorem about that class of lattice approximations, not about every conceivable regularisation\". main.tex:469-470 promises the labels.",
+            "fix": "\\item Marginal triviality of the scaling limits of 4D Ising and single-component lattice $\\lambda\\varphi^4_4$ models~\\cite{Aizenman2021}, together with the one-loop Coleman--Gross theorem~\\cite{Coleman1973}, supports the heuristic (not a theorem) that a non-trivial four-dimensional continuum limit requires asymptotic freedom.\n(Coleman1973 already exists in library/references.bib:1923, so make_refs.py will pick it up.)"
+          },
+          {
+            "location": "§Research landscape, Bałaban's programme: \"Dimock's expositions~\\cite{...} are the only sustained modern re-derivation.\"",
+            "problem": "This bullet sits in the Yang–Mills paragraph, so readers will take it to mean that Dimock re-derived Bałaban's Yang–Mills work. He did not: papers I–III treat scalar phi^4_3, and the 2022 overview treats abelian QED_3. \"Only\" also conflicts with the paper's own introduction (lines 101-104), which describes the 2026 Sussman–Alpöge and Aronow–Lopatto manuscripts continuing Bałaban's programme for QED_3/YM_3. Note 05 itself says Dimock \"reached QED_3 only\" and there is \"no independent re-derivation\" of the YM work.",
+            "severity": "major",
+            "evidence": "Crossref abstracts: 10.1142/S0129055X13300100 \"illustrated with a treatment of the ultraviolet problem for the scalar phi^4 model on toroidal lattice in dimension d = 3\"; 10.1063/1.4821275 has the same wording; 10.1063/5.0081057 \"quantum electrodynamics on a three-dimensional Euclidean spacetime\". Dimock ETH slides p.2: \"Exposition of the method for phi^4_3\". notes/05-balaban-program.md:47 (phi^4_3 and QED_3 only) and :242 (\"No independent re-derivation. Dimock's program reached QED_3 only\"). main.tex:101-104.",
+            "fix": "\\item Dimock's expositions~\\cite{Dimock2013a,Dimock2013b,Dimock2013c,Dimock2014,Dimock2022} are the only sustained, refereed modern re-derivation of Ba{\\l}aban's method; they treat $\\varphi^4_3$ and QED$_3$, not non-Abelian Yang--Mills. The 2026 AI-generated manuscripts~\\cite{Sussman2026,Aronow2026} are unrefereed."
+          },
+          {
+            "location": "§Research landscape, Constructive QFT: \"was the first constructed asymptotically free renormalizable theory~\\cite{Gawedzki1985a,Feldman1986}\"",
+            "problem": "The priority claim is overstated. Asymptotically free, strictly renormalizable planar (wrong-sign) phi^4_4 was constructed earlier, by 't Hooft (CMP 88, 1983) and Rivasseau (CMP 95, 1984). The library note that this bullet summarizes explicitly says \"Apart from planar (large-N) and hierarchical models\" and labels the claim a community view [H]. The paper drops both qualifiers.",
+            "severity": "major",
+            "evidence": "Crossref 10.1007/BF01206876 ('t Hooft, \"Rigorous construction of planar diagram field theories in four dimensional Euclidean space\", CMP 88:1-25, 1983-03). Crossref 10.1007/BF01210833 (Rivasseau, \"Construction and Borel summability of planar 4-dimensional euclidean field theory\", CMP 95:445-486, 1984-12). The GN papers date from 1985-03 (BF01208817) and 1986-03 (BF01464282). notes/08-constructive-qft-and-renormalization-tools.md:28 (\"Apart from planar (large-N) and hierarchical models [31-34], GN2 is generally cited as the only constructed asymptotically free, strictly renormalizable continuum QFT [H, community view]\") and :269.",
+            "fix": "\\item The massive Gross--Neveu model in two dimensions is generally cited as the first non-planar, non-hierarchical asymptotically free renormalizable theory to be constructed~\\cite{Gawedzki1985a,Feldman1986}; planar $\\varphi^4_4$ with the wrong sign was constructed earlier~\\cite{Hooft1983,Rivasseau1984}.\n(Hooft1983 and Rivasseau1984 exist in library/references.bib.)"
+          },
+          {
+            "location": "Bibliography entries [72]-[74] (Dimock2013c, Dimock2014, Dimock2022), cited in §Bałaban's programme: \"Dimock's expositions\"",
+            "problem": "These three entries are typed @misc and have only eprint and doi fields. unsrtnat prints neither field for @misc, so the PDF shows a bare title and year with no journal, DOI, arXiv id or URL, and readers cannot locate the works. All three are in fact published journal articles. Dimock2013b also lacks its article number.",
+            "severity": "major",
+            "evidence": "main.bbl:488-500 shows that only the title and year are emitted. In the PDF text: \"[72] J. Dimock. The renormalization group according to Balaban — II. Large fields, 2013.\" and \"[73] ... III. Convergence, 2014.\" and \"[74] ... Stability for QED in d=3: an overview, 2022.\" Crossref: 10.1063/1.4821275 = J. Math. Phys. 54(9) 092301 (2013); 10.1007/s00023-013-0303-3 = Ann. Henri Poincaré 15(11) 2133-2175 (2014); 10.1063/5.0081057 = J. Math. Phys. 63(4) 042305 (2022); 10.1142/S0129055X13300100 = Rev. Math. Phys. 25(07) 1330010.",
+            "fix": "In library/references.bib (lines 2282, 2295, 2307, 2379), then re-run make_refs.py:\n@article{Dimock2013b, ... journal = {Rev. Math. Phys. 25 (2013) 1330010}, ...}\n@article{Dimock2013c, author = {Dimock, J.}, title = {{The renormalization group according to Balaban — II. Large fields}}, journal = {J. Math. Phys. 54 (2013) 092301}, year = {2013}, eprint = {1212.5562}, archivePrefix = {arXiv}, doi = {10.1063/1.4821275}}\n@article{Dimock2014, author = {Dimock, J.}, title = {{The renormalization group according to Balaban — III. Convergence}}, journal = {Ann. Henri Poincaré 15 (2014) 2133–2175}, year = {2014}, eprint = {1304.0705}, archivePrefix = {arXiv}, doi = {10.1007/s00023-013-0303-3}}\n@article{Dimock2022, author = {Dimock, J.}, title = {{Stability for QED in d=3: an overview}}, journal = {J. Math. Phys. 63 (2022) 042305}, year = {2022}, eprint = {2204.07201}, archivePrefix = {arXiv}, doi = {10.1063/5.0081057}}"
+          },
+          {
+            "location": "§Research landscape, Bałaban's programme: \"In 1984--1989 Ba{\\l}aban proved ultraviolet stability for lattice Yang--Mills on 3D and 4D tori\"",
+            "problem": "The lead sentence states an unconditional 4D result. The next bullet then says the 4D theorem is conditional, and the slides cited for this paragraph list only an upper stability bound. The opening sentence should not assert more than the bullets below it.",
+            "severity": "minor",
+            "evidence": "Dimock ETH slides p.5, \"Yang-Mills in d=3,4\": \"Results ... bounds on effective densities for RG flow; upper stability bound\" and \"Caveat: paper on coupling constant flow in second order perturbation theory missing\". notes/05-balaban-program.md:31 and :363-364 (4D is E* conditional, the unconditional version is O).",
+            "fix": "In 1984--1989 Ba{\\l}aban proved ultraviolet stability bounds (an upper bound on the partition function, and bounds on the effective densities) for lattice Yang--Mills on 3D tori, and on 4D tori conditionally on the running couplings staying small, using a gauge-covariant block-spin renormalization group."
+          },
+          {
+            "location": "§Research landscape, Bałaban's programme: \"companion result on the coupling flow was, according to secondary sources, never published\"",
+            "problem": "The sentence names \"secondary sources\" but cites nothing. The secondary source that actually says this, Dimock's 2013 slides, is already in the bibliography but is cited only on a later bullet.",
+            "severity": "minor",
+            "evidence": "Dimock ETH slides p.5: \"paper on coupling constant flow in second order perturbation theory missing\". notes/05-balaban-program.md:238 and :364.",
+            "fix": "companion result on the coupling flow was, according to secondary sources~\\cite{Dimock2013a}, never published."
+          },
+          {
+            "location": "Bibliography entry [60] Brydges2015a, cited in §Constructive QFT: \"Modern renormalization-group methods include~\\cite{Bauerschmidt2019,Brydges2015a}\"",
+            "problem": "The title is truncated, and the entry has no pages or DOI. The PDF shows only \"J. Stat. Phys. 159 (2015), 2015\" plus an arXiv URL.",
+            "severity": "minor",
+            "evidence": "arXiv API 1403.7244 title: \"A renormalisation group method. I. Gaussian integration and normed algebras\". The arXiv record and Crossref give the DOI 10.1007/s10955-014-1163-z, J. Stat. Phys. 159(3) 421-460.",
+            "fix": "@article{Brydges2015a, author = {Brydges, D. C. and Slade, G.}, title = {{A renormalisation group method. I. Gaussian integration and normed algebras}}, journal = {J. Stat. Phys. 159 (2015) 421–460}, year = {2015}, eprint = {1403.7244}, archivePrefix = {arXiv}, doi = {10.1007/s10955-014-1163-z}}"
+          },
+          {
+            "location": "Bibliography entry [62] Aizenman2021: \"Marginal triviality of the scaling limits of critical 4D Ising and φ^4_4 models\"",
+            "problem": "The bib uses the arXiv title, but the DOI points to the Annals version, whose published title reads \"λφ^4_4\".",
+            "severity": "minor",
+            "evidence": "Crossref 10.4007/annals.2021.194.1.3 title: \"Marginal triviality of the scaling limits of critical 4D Ising and $\\lambda\\phi_4^4$ models\". The arXiv 1912.07973 title has no lambda.",
+            "fix": "title = {{Marginal triviality of the scaling limits of critical 4D Ising and $\\lambda\\phi^4_4$ models}}"
+          },
+          {
+            "location": "Bibliography, all @article keys checked (e.g. [58] Feldman1986: \"Commun. Math. Phys. 103 (1986) 67–103, 1986\")",
+            "problem": "The volume, year and pages are packed into the journal field, so every article prints its year twice. Abbreviations are also inconsistent: Gawedzki1985a and Kotecky1986 use \"CMP\" while the others use \"Commun. Math. Phys.\".",
+            "severity": "minor",
+            "evidence": "PDF bibliography [58], [61], [63]-[69] and [75]-[80], [84] all end with \"(YYYY) pp, YYYY.\" refs.bib, Gawedzki1985a: journal = {CMP 102 (1985) 1–30}.",
+            "fix": "Split the fields, e.g. journal = {Commun. Math. Phys.}, volume = {103}, pages = {67--103}, year = {1986}. At minimum, replace \"CMP\" with \"Commun. Math. Phys.\" in Gawedzki1985a and Kotecky1986."
+          }
+        ]
+      }
+    },
+    {
+      "task": "cite-4",
+      "result": {
+        "checked": "I checked all 27 assigned keys. I did not modify any file.\n\nMETADATA. All 15 arXiv IDs were queried through the arXiv API: 2006.16229, 2201.03487, 2503.03060, 2111.10652, 2611.03640, 1303.5113, 1006.4518, 1101.0963, 1703.00501, 2201.06166, 2506.03247, hep-lat/9901004, 1210.4997, 2610.09093 and 2405.06423. Every ID exists, and title, authors and date match the bib.\n\nAll 15 DOIs were resolved through Crossref. Volume, pages, year and article number match for each of these:\n- Chatterjee2021: CMP 385(2) 1007-1039\n- Chandra2024b: Invent. 237, 541-696\n- Chevyrev2026d: ARMA 250(1) art. 11\n- Cao2023: CPDE 48(2) 209-251\n- Hairer2014: Invent. 198, 269-504\n- Luscher2010a / Luscher2011: JHEP\n- Guth1980: PRD 21, 2291-2307\n- Frohlich1982a: CMP 83, 411-454\n- Gopfert1982: CMP 82, 545-606\n- Dobrushin1985: pp. 347-370\n- Gaiotto2017: JHEP05(2017)091\n- Tanizaki2022: PTEP 2022 04A108\n- Morningstar1999: PRD 60 034509\n- Lucini2013: Phys. Rep. 526, 93-163\n\nGitHub repositories were checked through gh api:\n- openai/math: created 2026-10-06, Apache-2.0. The README says \"721 manuscripts organized into 373 families\", lists the Lean library and formalization.yaml, and has Comparator challenges.\n- openai/ten-proofs: created 2026-08-05. It has ComparatorChallenges and formalization.yaml v0.3.\n- The OpenAI2026b preprint directory exists, with its own BibTeX block. Lean doc lean/docs/215.md covers O(n), n>=3, on finite free-boundary subgraphs only.\n- leanprover/comparator: archived. The README confirms it was merged into core as lake comparator / lake check in v4.35.0.\n- mathlib-initiative/formalization.yaml: a self-reporting standard, template version v0.4.\n- PatrickMassot/leanblueprint: exists.\n\nWeb sources:\n- agmai.org: the five statements (22 Sep, 29 Sep, 6 Oct, 25 Oct, 26 Oct) and the Sep 29 guidelines at agmai.org/general-sep29/ are verified, including the 26 Oct call: \"make public without delay the natural-language and Lean outputs\".\n- OpenAI2026n: openai.com returned 403. Web search confirms the title \"Sharing AI progress in mathematics\", dated 6 Oct 2026 with a 15 Oct update. This is confirmed only through search snippets.\n\nNone of the 27 keys carries an UNVERIFIED flag in library/references.bib. Ebel2025 is not in the library; it is added in make_refs.py, and I verified it on arXiv.\n\nCLAIM SUPPORT. I located every sentence that cites these keys (main.tex lines 506, 515, 518-520, 527-538, 544-550, 604, 615, 678). I checked each one against the arXiv abstracts, Crossref, the repository files and library notes 02, 04, 06, 07 and 09.\n\nThese are supported as written:\n- Chatterjee2021: center symmetry implies confinement, and exponential decay with nontrivial center implies unbroken center symmetry.\n- Chandra2024b and Chevyrev2026d: 3D local theory and uniqueness of renormalisation.\n- Guth1980 and Frohlich1982a: the 4D U(1) Coulomb phase.\n- Gaiotto2017: the theta=pi anomaly.\n- Dobrushin1985.\n- Ebel2025: the computer-assisted tensor RG calibration (plan critique: beta<=0.12 for 2D Ising).\n- Morningstar1999 and Lucini2013.\n- OpenAI2026j/m/n as OpenAI's announced results and repositories.\n- Craig2026a as an AI-era claim: note 02 records it as GPT-6-Astra-assisted with an OpenAI affiliation.\n- AGMAI2026 as a public call for release.\n- LeanFRO2026, Mathlib2026b, Massot2026 and Becker2024 as tooling.\n\nFourteen problems follow: 1 critical, 3 major and 10 minor.",
+        "findings": [
+          {
+            "location": "Sec. 6 Research landscape, 'Stochastic quantization' bullet: \"and~\\cite{Cao2023} supplies a gradient-flow state space\"",
+            "problem": "Wrong citation for the claim. Cao2023 (arXiv:2111.10652, CPDE 2023) builds local solutions of the Yang-Mills heat flow (DeTurck gauge) from random distributional initial data. The gradient-flow state space is defined in the companion paper, Cao-Chatterjee, 'A state space for 3D Euclidean Yang-Mills theories' (CMP 405 (2024) art. 3). The library has that paper under key Cao2024a, and the paper does not cite it.",
+            "severity": "critical",
+            "evidence": "arXiv API abstract of 2111.10652: 'We construct local solutions to the Yang-Mills heat flow ... for a certain class of random distributional initial data ... In a companion work, we use the main results of this paper to propose a way towards the construction of 3D Yang-Mills measures.' Crossref 10.1007/s00220-023-04870-y gives 'A State Space for 3D Euclidean Yang–Mills Theories', Cao & Chatterjee, CMP 405 no.1 art.3 (2024). library/notes/06-stochastic-quantization-2d-3d.md:16 and :234 attribute the state space to [21,22] = both papers (:340-341). library/references.bib:1375-1386 has key Cao2024a (arXiv:2111.12813).",
+            "fix": "Replace with: \"and~\\cite{Cao2023,Cao2024a} supply a gradient-flow state space: \\cite{Cao2023} solves the Yang--Mills heat flow from rough random initial data, and~\\cite{Cao2024a} builds on it a state space for 3D Euclidean Yang--Mills theories.\" Then re-run make_refs.py, which pulls Cao2024a from library/references.bib."
+          },
+          {
+            "location": "Sec. 9 Disclosure of AI use, first sentence: \"intended to meet the transparency expectations articulated for AI-assisted mathematics in 2026~\\cite{AGMAI2026}\"",
+            "problem": "Materially overstated. AGMAI's guidelines ask for the model name, the prompts, a summarized chain of thought, the time taken and the estimated compute cost, and they are addressed to AI labs. The paper's disclosure withholds exact model versions ('available on request') and gives no time or cost. It does not meet the cited expectations, and the sentence implies that it does.",
+            "severity": "major",
+            "evidence": "https://agmai.org/general-sep29/ ('Responsible Release of AI-Generated Mathematics', 29 Sep 2026), Step I item 3: the AI lab should publish 'the name of the model, the prompts used, a (summarized) chain of thought, the time taken, and the estimated cost of computation'. The 25 Oct statement (agmai.org) lists 'the name of the model, prompts, chains of thought, number of attempts, compute used, and costs'. Per WebFetch summary, the recommendations target AI labs, not individual authors. main.tex:684-685: 'Exact model versions are recorded in the session metadata retained by the author and are available on request.'",
+            "fix": "Replace the sentence with: \"This disclosure is modelled on the release guidelines of the Advisory Group on Mathematics and Artificial Intelligence~\\cite{AGMAI2026}. Those guidelines are addressed to AI laboratories and ask for the model name, the prompts, a summarized chain of thought, the time taken and the estimated compute cost. We give the model family, token counts and the orchestration scripts, which contain the prompts. We do not give exact model versions, chains of thought, wall-clock time or cost here.\" Better still, state the exact model versions and an approximate cost in the 'Systems used' paragraph."
+          },
+          {
+            "location": "Sec. 6, 'Stochastic quantization' bullet: \"A 2D non-Abelian Yang--Mills--Higgs measure was constructed in November 2026~\\cite{Bringmann2026b}\"",
+            "problem": "The sentence presents a 4-day-old, unrefereed 350-page preprint as an established construction. It also omits the setting (the torus T^2). The library note labels this work [PREPRINT], says it is 'not yet refereed; verified by us only at the level of statements', and records that the authors disclose AI-proved lemmas. All of these qualifiers are dropped.",
+            "severity": "major",
+            "evidence": "arXiv API 2611.03640v1: published 2026-11-02T18:58Z, no journal_ref. Abstract: 'first mathematical construction of the non-Abelian Yang-Mills-Higgs measure on a two-dimensional torus'. library/notes/06-stochastic-quantization-2d-3d.md:111 heading '[PREPRINT, 2 Nov 2026]'. :113 'Status: not yet refereed; verified by us only at the level of statements'; authors' Remark 1.6 'natural candidate'. :124 AI disclosure: GPT-6 Astra / GPT-5.6 Sol proved Prop 3.55, Lem 3.58 and others.",
+            "fix": "\\item A construction of the non-Abelian Yang--Mills--Higgs measure on the two-dimensional torus, for all fixed couplings, was posted on 2 November 2026~\\cite{Bringmann2026b}. It is an unrefereed preprint, and its authors disclose that several lemmas were proved by AI models."
+          },
+          {
+            "location": "Sec. 6, 'AI-era claims' bullet: \"a claimed all-temperature exponential decay for 2D $O(n)$ models with a Lean development~\\cite{OpenAI2026b}\"",
+            "problem": "The scope of the cited claim is misstated. OpenAI claims decay only for n>=3, nearest-neighbour, on the square lattice. The Lean development covers finite free-boundary subgraphs and not the infinite-volume limit. As written, the sentence would include n=1 (Ising) and n=2 (XY), where all-temperature exponential decay is false because of the Ising transition and BKT. The bib entry also has no URL.",
+            "severity": "major",
+            "evidence": "openai/math CONTENTS.md, family 215 entry: 'We prove exponential decay of two-point correlations for the classical nearest-neighbor O(n) model on the square lattice, for every n ≥ 3 and every finite positive inverse temperature. The estimate is uniform over finite free-boundary subgraphs'. openai/math lean/docs/215.md: 'The infinite-volume limit and the separate O(4) spectral-gap claim are not included.' The repo's own BibTeX (preprints/Exponential-decay-in-two-dimensional-classical-On-models-September-23-2026/README.md) gives the paper.pdf URL.",
+            "fix": "Text: \"These include a claimed exponential decay of spin correlations at every positive temperature for the 2D nearest-neighbour $O(n)$ model with $n\\ge3$, with a Lean development covering finite free-boundary subgraphs~\\cite{OpenAI2026b}.\" Bib, add to OpenAI2026b: url = {https://github.com/openai/math/blob/main/preprints/Exponential-decay-in-two-dimensional-classical-On-models-September-23-2026/paper.pdf}, and set the title to {Exponential decay in two-dimensional classical $O(n)$ models}."
+          },
+          {
+            "location": "Sec. 6, 'Stochastic quantization' bullet: \"The method is scaling-critical in four dimensions~\\cite{Hairer2014}\"",
+            "problem": "The statement is wrong as worded, and the citation does not support the Yang-Mills part. Criticality is a property of the equation, not of the method: the 4D Yang-Mills Langevin equation is scaling-critical, so regularity structures, which require local subcriticality, do not apply. Hairer 2014 states the subcriticality requirement and discusses Phi^4 at d=4, but never mentions Yang-Mills.",
+            "severity": "minor",
+            "evidence": "pdftotext of library/pdfs/1303.5113.pdf: 'In dimension 4, the model (Φ4) becomes critical'; 'dimension 4 is critical'; no occurrence of 'Yang'. library/notes/06-stochastic-quantization-2d-3d.md:17: 'The YM Langevin equation is scaling-critical exactly at d = 4. Regularity structures, paracontrolled calculus and the flow-equation method all require subcriticality.'",
+            "fix": "\\item In four dimensions the Yang--Mills Langevin equation is scaling-critical, which places it outside the locally subcritical class to which regularity structures~\\cite{Hairer2014} and related methods apply."
+          },
+          {
+            "location": "Sec. 6, 'Stochastic quantization' bullet: \"Gradient-flow observables~\\cite{Luscher2010a,Luscher2011} are a natural UV-finite observable class\"",
+            "problem": "The qualifier is missing. UV-finiteness of flowed correlators is proved only to all orders of perturbation theory (Lüscher-Weisz); Lüscher 2010 only 'suggests' it from theory and numerics. In a paper about rigorous construction, an unqualified 'UV-finite' overstates what is known.",
+            "severity": "minor",
+            "evidence": "arXiv 1101.0963 abstract: 'to all loop orders, we show that the correlation functions are finite'. arXiv 1006.4518 abstract: studies 'suggest that the gauge field obtained at flow time t>0 is a smooth renormalized field'. library/notes/06-stochastic-quantization-2d-3d.md:260: 'UV-finite in perturbation theory in 4D'.",
+            "fix": "\\item Gradient-flow observables~\\cite{Luscher2010a,Luscher2011}, which are UV-finite to all orders of perturbation theory, are a natural observable class."
+          },
+          {
+            "location": "Sec. 6, 'Other relevant results': \"Semiclassical gapped regimes are known on compactified geometries~\\cite{Tanizaki2022}\"",
+            "problem": "Placed in a list next to rigorous results, 'are known' reads as rigorous. Tanizaki-Ünsal is a controlled semiclassical physics analysis on small T^2 x R^2 with 't Hooft flux, and its link to R^4 is explicitly conjectural. The bib entry also omits the published version.",
+            "severity": "minor",
+            "evidence": "arXiv 2201.06166 abstract: 'We give the semiclassical description ... We conjecture that the weak-coupling vacuum structure on small T^2 x R^2 is adiabatically connected to the strong-coupling regime on R^4'. library/notes/09-mass-gap-mechanisms.md:58: 'Their link to R^4 rests on an unproven \"adiabatic continuity\" conjecture'. Crossref 10.1093/ptep/ptac042: PTEP 2022(4) 04A108.",
+            "fix": "Text: \"\\item Controlled semiclassical (non-rigorous) derivations of confinement and a gap exist on small $T^2\\times\\R^2$ with 't~Hooft flux~\\cite{Tanizaki2022}; their continuity to $\\R^4$ is conjectural.\" Bib: change to @article, journal = {Prog. Theor. Exp. Phys. 2022 (2022) 04A108}, doi = {10.1093/ptep/ptac042}."
+          },
+          {
+            "location": "Sec. 6, 'Other relevant results': \"Rigorous confinement holds for 3D $U(1)$~\\cite{Gopfert1982}\"",
+            "problem": "The statement drops the lattice action. Göpfert-Mack prove an area law at all couplings for 3D U(1) with the Villain action. The library notes stress that results for one action do not automatically transfer to another.",
+            "severity": "minor",
+            "evidence": "library/notes/09-mass-gap-mechanisms.md:303: 'For 3D U(1) LGT with Villain action they prove positivity of the string tension (area law) for all couplings'. library/notes/07-lattice-rigorous-results.md:75: 'Göpfert–Mack [12] ... use it. Results for one action do not automatically transfer to the other.'",
+            "fix": "\\item Rigorous confinement (an area law at all couplings) holds for 3D $U(1)$ lattice gauge theory with the Villain action~\\cite{Gopfert1982}."
+          },
+          {
+            "location": "Sec. 7.3 AI operating model: \"Comparator-gated challenges, honest-axiom patterns, conditional hypotheses, and metadata files~\\cite{OpenAI2026m,OpenAI2026j,LeanFRO2026,Mathlib2026b}\"",
+            "problem": "The 'honest-axiom pattern' (explicit axiom declarations permitted in Comparator, with status proved-conditionally) comes from openai/PrimeGaps186, which is not cited. The library notes treat it as the one exception among OpenAI's repositories.",
+            "severity": "minor",
+            "evidence": "library/notes/04-openai-github-proofs.md:20 'The one exception is PrimeGaps186. It openly declares three project axioms'; §3.5 (:297) 'openai/PrimeGaps186: the honest-axiom pattern'. gh api repos/openai/PrimeGaps186: created 2026-09-02, description 'Conditional Lean formalization and numerical certificate for prime gaps at most 186.' library/references.bib:5804 key OpenAI2026l.",
+            "fix": "Change the citation to \\cite{OpenAI2026m,OpenAI2026j,OpenAI2026l,LeanFRO2026,Mathlib2026b} and re-run make_refs.py."
+          },
+          {
+            "location": "refs.bib entry Chevyrev2026d (rendered at main.bbl:582)",
+            "problem": "An internal verification annotation, '[corrected from \"no. 11\"]', is stored in the journal field and prints in the published bibliography.",
+            "severity": "minor",
+            "evidence": "main.bbl:582 renders as '\\emph{ARMA 250 (2026) no. 1, art. 11 [corrected from \"no. 11\"]}'. Crossref 10.1007/s00205-025-02163-3: ARMA vol 250, issue 1, article-number 11. arXiv journal_ref: 'Archive for Rational Mechanics and Analysis, vol. 250 (2026), no. 1, Paper No. 11'.",
+            "fix": "journal = {Arch. Ration. Mech. Anal. 250 (2026), no. 1, Paper No. 11}, in library/references.bib, then regenerate refs.bib."
+          },
+          {
+            "location": "refs.bib entry AGMAI2026 (rendered at main.bbl:714-719)",
+            "problem": "The howpublished field is a garbled fragment, 'and 26 Oct 2026', and renders as 'and 26 Oct 2026, 2026.' The author name also differs from the organization's own name.",
+            "severity": "minor",
+            "evidence": "main.bbl:718 '\\newblock and 26 Oct 2026, 2026.'. agmai.org (WebFetch) gives 'Advisory Group on Mathematics and Artificial Intelligence (AGMAI)'. The Sep 29 guidelines are titled 'Responsible Release of AI-Generated Mathematics' (agmai.org/general-sep29/).",
+            "fix": "@misc{AGMAI2026, author = {{Advisory Group on Mathematics and Artificial Intelligence (AGMAI)}}, title = {{Statements of 22 Sep, 29 Sep (``Responsible Release of AI-Generated Mathematics''), 6 Oct, 25 Oct and 26 Oct 2026, incl. ``Recommendation for Immediate Release of Yang--Mills AI Output''}}, howpublished = {\\url{https://agmai.org/}; guidelines at \\url{https://agmai.org/general-sep29/}}, year = {2026}, note = {Accessed 6 Nov 2026}}"
+          },
+          {
+            "location": "refs.bib entry Dobrushin1985",
+            "problem": "A book chapter is typed as @book, so the chapter title renders as a book title. The volume editors are missing.",
+            "severity": "minor",
+            "evidence": "Crossref 10.1007/978-1-4899-6653-7_20: chapter pp. 347-370 in 'Statistical Physics and Dynamical Systems'. Crossref 10.1007/978-1-4899-6653-7: editors J. Fritz, A. Jaffe, D. Szász; Birkhäuser Boston, 1985. main.bbl:655 shows the chapter title italicised as a book.",
+            "fix": "@incollection{Dobrushin1985, author = {Dobrushin, R. L. and Shlosman, S. B.}, title = {{Constructive criterion for the uniqueness of Gibbs field}}, booktitle = {Statistical Physics and Dynamical Systems}, editor = {Fritz, J. and Jaffe, A. and Sz\\'asz, D.}, publisher = {Birkh\\\"auser}, address = {Boston}, pages = {347--370}, year = {1985}, doi = {10.1007/978-1-4899-6653-7_20}}"
+          },
+          {
+            "location": "refs.bib entry OpenAI2026j",
+            "problem": "Two small problems. The note field adds an unrelated URL (the O(3) massive-continuum preprint), which none of the citing sentences (lines 544, 604) uses. The '721 manuscripts, 373 families' count is a moving 'current catalogue', but the entry gives no access date.",
+            "severity": "minor",
+            "evidence": "gh api repos/openai/math/readme: 'The current catalogue contains 721 manuscripts organized into 373 families'. pushed_at 2026-10-30. Press coverage at release cited 722/372 (WebSearch results), which confirms the count changes.",
+            "fix": "Remove the 'Additional URLs' note. Set howpublished = {GitHub repository, Apache-2.0; 721 manuscripts in 373 families as of 6 Nov 2026} and note = {Accessed 6 Nov 2026}."
+          },
+          {
+            "location": "refs.bib entries Gaiotto2017, Lucini2013, Morningstar1999 (journal entries lacking DOI)",
+            "problem": "Incomplete metadata on otherwise correct entries. Each is typed @article with a journal string but has no DOI, and Lucini2013 has a first page only. These are not errors, but every other journal entry in the bib carries a DOI.",
+            "severity": "minor",
+            "evidence": "Crossref: 10.1007/JHEP05(2017)091 (Gaiotto et al.); 10.1016/j.physrep.2013.01.001, Phys. Rep. 526(2) 93-163 (Lucini-Panero); 10.1103/PhysRevD.60.034509 (Morningstar-Peardon).",
+            "fix": "Add doi = {10.1007/JHEP05(2017)091} to Gaiotto2017. Add doi = {10.1016/j.physrep.2013.01.001} to Lucini2013 and set its journal to {Phys. Rep. 526 (2013) 93–163}. Add doi = {10.1103/PhysRevD.60.034509} to Morningstar1999."
+          }
+        ]
+      }
+    },
+    {
+      "task": "claims",
+      "result": {
+        "checked": "I ran the axiom audit (`lake env lean YangMills/Audit.lean`) and read every .lean file, lean-toolchain, lake-manifest.json, the workflow run records (<session-dir>/workflows/wf_*.json), the scripts, notes 01–11, PROBLEM.md, PLAN.md and the critiques. I also read the committee's primary text as fetched in the research transcripts, and compiled the reviewers' exploit files. I modified nothing. Everything below checked out unless it appears in the findings.\n\nLEAN AND AUDIT\n- Audit output: all 13 theorems in Table 3 report only [propext, Classical.choice, Quot.sound]. So do tensorRep, existsWithMassGapFor_of_sun and su_lieAlgebra_simple.\n- clay_yang_mills, clay_existence, su_yang_mills_exists, su_yang_mills_mass_gap and os_nonTrivial_fullField_consistent add sorryAx.\n- `sorry` appears only in OpenProblems.lean (5 times). There are no `axiom` declarations, and the only external imports are Mathlib.\n- Toolchain is leanprover/lean4:v4.36.0-rc2. Mathlib rev is 9d581dfff2e41de989072ea63abf3daf69311520 (inputRev v4.36.0-rc2).\n- wc -l gives 1,722 lines (paper says \"about 1,700\").\n\nLEAN DEFINITIONS VERSUS THE PAPER (all match):\n- OSAxioms: 7 fields.\n- OS.Cluster: `a ≠ 0 → a 0 = 0`.\n- HasMassGap: 0<m and ‖B_T(F,T_tG)‖ ≤ e^{-mt}√Re B_T(F,F)·√Re B_T(G,G), for ordered-positive F, G and t ≥ 0.\n- NonTrivial: 4 clauses. euclid gives ρ(R⁻¹)ᵀf(R⁻¹(x−a)).\n- IsWilsonLimit: columns of Z_k lie in TFFSpace (range condition); a_k>0, a_k→0, a_k(L_k+1)→∞, β_k→∞; convergence on compactly supported, disjointly supported tuples.\n- TFFSpace has dimension 21. tensorRep is the Kronecker R⊗R⊗R⊗R.\n- FullFieldContent, ShortDistanceAF (scalarDir = δδ−δδ, D_λh = λ⁻⁴h(x/λ), λ⁸log²), and AsymptoticScaling with b0 = 11N/(3(4π)²) and b1 = 34N²/(3(4π)⁴).\n- The Verbatim blocks; ExistsWithMassGapFor, ClayExistence, SUNExists, SUNExistsWithMassGap, M7a and M7b; and the two ladder theorems.\n- isCompact_specialUnitaryGroup: no compactness of the special unitary group or of unitaries exists in the pinned Mathlib.\n\nEXPLOIT FILES\n- I compiled JL_ClusterCollapse, RT_All, RT_Cluster, ClayLens_Cluster, ClayLens_Gap, ClusterZero and GapLens3. All 7 now fail (exit 1), as claimed.\n\nWORKFLOW STATISTICS\n- Library (wf_f5e14fa3): agentCount 24, totalTokens 9,142,475, totalToolCalls 2,560. The script confirms 11+11+indexer+critic.\n- Statement review (wf_6798a78b): agentCount 20, tokens 3,639,596. 6 lenses, 13 confirmed, 1 refuted (GAP-2). The a=0 bug was found by three reviewers (JL-1, CL-1, RT-1). The verifier was told to default to refuted.\n- Plan critique (wf_575fbe60): 5 agents, 2,025,700 tokens.\n- Non-vacuity (wf_23aa9aef): 3 agents, 574,347 tokens.\n- Every subagent message and every orchestrator message records model <model>.\n\nLIBRARY\n- 11 notes plus a critique. references.bib has 666 entries; the index reports 648 verified, 17 unverified, 1 mixed.\n- paper/refs.bib has 111 entries; OpenAI2026p is flagged.\n\n2026 EVENTS (checked against notes 02, 03, 04, 05, 11 and the committee's primary text)\n- Dates: 26 Oct and 8 Sep; the 3 Nov second statement.\n- Committee: members, Gross as chair, \"among the important elements\", and that the mass gap and confinement remain open. The 1,147 number itself is right; its scope is the problem (see findings).\n- Balaban: 12 papers, 399 CMP pages; the 4D theorem is conditional; the companion Theorem 2 was never published.\n- Dimock as the only sustained re-derivation.\n- Sussman–Alpöge, Aronow–Lopatto (Hexagon, AI-generated) and Craig.\n- lean-dojo is self-described as incomplete; formal-conjectures has no YM statement; OpenAI's page returned 403.\n\nPLAN\n- Odds ≤1% (12 months) and 3–8% (36 months); bridge 60–80% within 3 months; budget about 10¹⁰ tokens.\n- Tracks A–E and the ladder rungs. 14-day clean-room period; nine stop rules exist (SR0–SR8).\n- Track E slab / O(4) heuristic; the ethics commitments.\n\nPACKAGE\n- dev/workflows, the licences, MANIFEST.tsv (121) and fetch_pdfs.sh are present; PDFs are gitignored.\n- The human's choice of visibility, route and licences is confirmed by the AskUserQuestion answers.\n- No personal email appears in the package.\n- JW, Douglas 2004 and the OS I/II claims match note 01.",
+        "findings": [
+          {
+            "location": "§2.3 Table 1 (main.tex:185): \"4D existence, compact simple $G$ & \\textbf{Claimed} by OpenAI\"",
+            "problem": "The table says OpenAI claims existence for every compact simple G. No public source states which gauge groups OpenAI's claim covers.",
+            "evidence": "library/notes/02-openai-ym-claim.md:110 ('Not stated anywhere public: the gauge group(s): all compact simple G, or SU(N), or SU(3) only'), :348 ('Which G … Unknown'), :391. The committee's first statement (KITP PDF; full text in research transcript agent-a32c73e1f2f6dee8a.jsonl) mentions only 'quantum Yang-Mills theory' and SU(3) for QCD. PLAN.md:54-55. PROBLEM.md:37 has the same error ('any compact simple G').",
+            "severity": "critical",
+            "fix": "Replace the row with: `4D existence (gauge groups not stated) & \\textbf{Claimed} by OpenAI for pure Yang--Mills theory; gauge groups, axioms and Lean statement not yet public (unreleased; under committee review)~\\cite{OpenAI2026p,Douglas2026e,Douglas2026d}. \\\\`. Make the same correction at PROBLEM.md:37."
+          },
+          {
+            "location": "§6 Stochastic quantization (main.tex:515): \"\\cite{Cao2023} supplies a gradient-flow state space\"",
+            "problem": "Wrong paper. Cao2023 is the Cao–Chatterjee heat-flow paper. The 3D gradient-flow state space is in their companion paper, Cao–Chatterjee CMP 405 (2024).",
+            "evidence": "paper/refs.bib:757-765: Cao2023 = 'The Yang–Mills heat flow with random distributional initial data', Comm. PDE 48, arXiv:2111.10652. notes/06-stochastic-quantization-2d-3d.md:143-144 ([21] heat flow; [22] 'the state space 𝒳') and :340-341. library/references.bib:1375-1386: Cao2024a = 'A state space for 3D Euclidean Yang–Mills theories', arXiv:2111.12813.",
+            "severity": "critical",
+            "fix": "`established~\\cite{Chandra2024b,Chevyrev2026d}, and Cao and Chatterjee~\\cite{Cao2023,Cao2024a} supply a gradient-flow state space.` Then rerun make_refs.py so that Cao2024a enters refs.bib."
+          },
+          {
+            "location": "Abstract (main.tex:64-65): \"all fixed and guarded by regression tests\"; §5.2 (main.tex:444-445): \"a regression lemma guards the fix\"",
+            "problem": "Overstated. No automated regression test guards any of the fixes. exists_spatial_ne_zero is a standalone fact about E4 and never mentions OS.Cluster, so reverting `a ≠ 0` would keep the library building. The exploit files sit in scratch/, which is neither imported nor built. Nothing at all guards the growth, FullFieldContent/range-condition, ShortDistanceAF or representation fixes.",
+            "evidence": "Sanity.lean:126-131 (`∃ a : E4, a ≠ 0 ∧ a 0 = 0`). scratch/README.md ('not imported by the YangMills library'). PLAN.md:107 lists '¬ShortDistanceAF as a regression' as a future rung (M3½). Compiling the 7 exploit files by hand shows they now fail, but no build target runs them.",
+            "severity": "major",
+            "fix": "Abstract: `...and four major fidelity defects, all fixed.` §5.2: `\\item Fixed by requiring $a\\neq0$. The reviewers' exploit files (kept in \\lean{scratch/}, outside the build) no longer compile, and \\lean{exists\\_spatial\\_ne\\_zero} shows that the corrected axiom is not vacuous; no automated regression test yet guards the fixes.`"
+          },
+          {
+            "location": "§1 The 2026 situation (main.tex:97): \"The natural-language proof (reported as 1{,}147 pages)\"",
+            "problem": "The paper attributes the 1,147 pages to the Yang–Mills proof. The committee speaks of 'the OpenAI manuscripts' and 'the full 1147-page LLM proofs' (plural) and does not say whether the figure covers YM alone, YM plus QCD, or more.",
+            "evidence": "Committee first-statement text: 'together with the full 1147-page LLM proofs'. notes/02:187 ('Its scope is unstated: it could be YM only, YM plus QCD, or all three theories'), :397. PLAN.md:55 ('The scope is unknown; the page count may include QCD').",
+            "severity": "major",
+            "fix": "`The natural-language material (the committee refers to ``the full 1147-page LLM proofs'', without saying whether this covers Yang--Mills alone or also QCD) and its Lean formalization are held by a`"
+          },
+          {
+            "location": "§7.4 Honest odds (main.tex:626): \"the 4D mass gap is $<0.5\\%$ at any budget considered.\"",
+            "problem": "This misstates the feasibility table the section says it adopts. At the NS-scale tier the 36-month figure is <1%, and the stated sustained budget gives <0.1% at 12 months. The bullet also contradicts its own lead-in ('At a sustained budget...').",
+            "evidence": "plan/critique-feasibility-skeptic.md:84, M9 row: ≈0 (T1), <0.1% (T2, 12 months), <0.5% (T2, 36 months), <0.2% (T3, 12 months), <1% (T3, 36 months). PLAN.md:38: '<0.1% | <0.5%'.",
+            "severity": "major",
+            "fix": "`\\item the 4D mass gap is $<0.1\\%$ within 12 months and $<0.5\\%$ within 36 months at this budget, and $<1\\%$ within 36 months even at a Navier--Stokes-scale budget of about $10^{11}$ tokens per year.`"
+          },
+          {
+            "location": "§1 The 2026 situation (main.tex:93): \"is disputed~\\cite{Constantin2026c,Bastounis2026}\"",
+            "problem": "Bastounis2026 does not address scope relative to Fefferman. It shows that the Lean proof's intermediate lemmas differ from the paper's, and it does not claim the headline theorem fails. Constantin2026c proves a conditional obstruction; it does not itself dispute scope. The citation pair does not support 'scope … is disputed'.",
+            "evidence": "notes/03-openai-navier-stokes-method.md:32-34 and :317-320 (Bastounis 'do not claim the NL proof is wrong, or that the headline Lean theorem fails'). :301-303 (CIV: OpenAI-type constructions cannot have real-analytic forcing).",
+            "severity": "major",
+            "fix": "`Fefferman's problem statement~\\cite{Fefferman2000} is debated: Constantin, Ignatova and Vicol show that constructions of this type cannot have real-analytic forcing~\\cite{Constantin2026c}.` (Bastounis2026 stays cited at line 111 for the Lean/paper drift.)"
+          },
+          {
+            "location": "§6 Constructive QFT (main.tex:479-480): \"shows that non-triviality in four dimensions requires asymptotic freedom\"",
+            "problem": "This presents a heuristic as a theorem. Aizenman–Duminil-Copin prove triviality of φ⁴₄ only. The library note says explicitly that 'non-trivial ⇒ AF' in 4D is not a theorem.",
+            "evidence": "notes/08-constructive-qft-and-renormalization-tools.md:333: 'No general theorem says \"non-trivial ⇒ AF\" in 4D. The statement is a strongly supported heuristic, not a theorem.'",
+            "severity": "major",
+            "fix": "`\\item Triviality of $\\varphi^4_4$~\\cite{Aizenman2021} supports the heuristic, not a theorem, that a non-trivial four-dimensional theory must be asymptotically free.`"
+          },
+          {
+            "location": "§6 Stochastic quantization (main.tex:517-518): \"A 2D non-Abelian Yang--Mills--Higgs measure was constructed in November 2026\"",
+            "problem": "The sentence states an unrefereed 350-page preprint, posted four days before the paper's date, as an established construction. The library labels it [PREPRINT], and this section claims to preserve the notes' labels.",
+            "evidence": "notes/06:15 ('On 2 Nov 2026 Bringmann, Cao, Hairer and Zhao posted a 350-page construction … [PREPRINT]') and :111. refs.bib:767-775 ('350 pp., 2 Nov 2026', arXiv:2611.03640).",
+            "severity": "major",
+            "fix": "`\\item A construction of the 2D non-Abelian Yang--Mills--Higgs measure was posted as a 350-page preprint on 2 November 2026~\\cite{Bringmann2026b} (not yet refereed).`"
+          },
+          {
+            "location": "§6 AI-era claims (main.tex:545): \"a claimed all-temperature exponential decay for 2D $O(n)$ models\"",
+            "problem": "The scope is misstated. The formalized claim is for n ≥ 3 (Polyakov's conjecture), in a uniform finite-volume form. For n = 1, 2 an all-temperature decay claim would be false.",
+            "evidence": "notes/04-openai-github-proofs.md:267-269 (ClassicalON.lean: 'exponential decay … for the 2D classical O(n) model, n≥3, at every β>0', uniform over finite subgraphs) and :273 (the headline continuum claim is not formalized).",
+            "severity": "major",
+            "fix": "`These include a claimed exponential decay at every temperature for the 2D classical $O(n)$ model with $n\\ge3$ (Polyakov's conjecture), stated in Lean in a uniform finite-volume form; the family's headline continuum claim is not formalized~\\cite{OpenAI2026b}.`"
+          },
+          {
+            "location": "§1 Why a formal statement matters now (main.tex:111-112): \"self-described as incomplete and is satisfied by a toy model\"",
+            "problem": "Only one public candidate YM statement is mentioned. The library documents a second, AI-written candidate with a Zenodo DOI. It predates this one (25 Oct 2026) and shares the core design: the 21 components of tr FF, a Wilson-lattice variant and a YM/AF fingerprint. A 'full citations' paper framed as a pre-registered statement should cite it.",
+            "evidence": "notes/01-problem-definition.md:53 (AIdevsmartdata/yang-mills-lean-statement v1.1, 2026-10-25: 21 components, lattice-route variant A, 'YM fingerprint' B, AF constants; written by Claude agents; C-even-only gap). library/references.bib:6180-6189 (Remondiere2026, doi:10.5281/zenodo.23650415).",
+            "severity": "major",
+            "fix": "`self-described as incomplete and is satisfied by a toy model~\\cite{Leandojo2026}; a second, AI-written candidate with the same 21-component field content, a Wilson-lattice variant and a Yang--Mills fingerprint passes OS reconstruction as a hypothesis and has not been reviewed by experts~\\cite{Remondiere2026}; and the community collection of formal conjectures~\\cite{DeepMind2026} contains no Yang--Mills statement (library notes~01 and~03).` Then rerun make_refs.py."
+          },
+          {
+            "location": "§9 Systems used (main.tex:684-685): \"Exact model versions are recorded in the session metadata retained by the author\"",
+            "problem": "The model is known but withheld, yet the section claims to meet AGMAI's transparency expectations, which ask for the model name.",
+            "evidence": "Every workflow record has defaultModel '<model>'. All 5,672 subagent messages and 281 orchestrator messages record <model>. notes/02:188: AGMAI pathway 2B asks for 'model name, prompts, … compute and cost'.",
+            "severity": "major",
+            "fix": "`toolchain. The orchestrating session and all workflow subagents ran Claude (model identifier \\texttt{<model>}); session transcripts are retained by the author and are available on request.`"
+          },
+          {
+            "location": "§9 Systems used (main.tex:682-684): \"plus file, shell, web-search and web-fetch tools, and the Lean toolchain\"",
+            "problem": "The disclosure is incomplete. Research subagents also used the alphaXiv MCP service. It includes a PDF question-answering tool whose answers may be machine-generated, which makes it a third-party AI-assisted source for the library notes.",
+            "evidence": "Subagent transcripts (wf_f5e14fa3): 40 calls to answer_pdf_queries and 7 to discover_papers. The library script explicitly allows them (dev/workflows/ym-research-library-wf_f5e14fa3-a3b.js, COMMON block: 'you may also use the alphaXiv MCP tools').",
+            "severity": "major",
+            "fix": "`many subagents in parallel, plus file, shell, web-search and web-fetch tools, the alphaXiv paper-search and PDF question-answering service (a third-party tool whose answers may be machine-generated; 47 calls while building the library), and the Lean`"
+          },
+          {
+            "location": "§10 Data availability (main.tex:741): \"the Lean project (\\lean{lean/YangMills})\", via its README",
+            "problem": "The deposited Lean README still describes v0.1. Its one-paragraph statement omits FullFieldContent and ShortDistanceAF. It calls Z_k a 'finite renormalization', which is the very wording §5.2 reports as a fixed documentation defect (LAT-3). It points to 'PROBLEM.md §5' for the design choices, which are in §4.",
+            "evidence": "lean/YangMills/README.md, 'The statement in one paragraph', item 3: '(a → 0, aL → ∞, β → ∞, finite renormalization)'. 'See ../../PROBLEM.md §5 for the full discussion'. PROBLEM.md:111 (§4 = choices), :139 (§5 = review history). Review finding LAT-3 in wf_6798a78b-95c.json.",
+            "severity": "major",
+            "fix": "In lean/YangMills/README.md, replace item 3 with: \"`S` is the continuum limit (`a → 0`, `aL → ∞`, `β → ∞`, divergent renormalization matrices `Z_k` valued in the 21-dimensional `tr F F` space, plus vacuum subtraction) of Wilson's lattice gauge theory for *some* faithful unitary representation of `G`;\". Add: \"`FullFieldContent`: every non-zero direction in the 21-dimensional space gives a non-zero state; `ShortDistanceAF`: in the scalar channel `λ⁸ log²(1/λ) S₂(D_λh₁, D_λh₂) → C ∫∫ h₁h₂|x−y|⁻⁸` with `C > 0`.\" Change '§5' to '§4 (choices) and §5 (review history)'."
+          },
+          {
+            "location": "Abstract (main.tex:47-48): \"first stated task is to check that its ``definitions and problem statements\"",
+            "problem": "The quotation mixes two documents. The words are verbatim from the 3 November second statement. The 'first objective' sentence of the first statement reads 'definitions and problem statement correspond with those which are standard'.",
+            "evidence": "Committee texts in research transcript agent-a32c73e1f2f6dee8a.jsonl. First statement: 'Our first objective will be to check that the definitions and problem statement correspond with those which are standard in physics and mathematics'. Second statement: 'specifically that the definitions and problem statements correspond with those that are standard in physics and mathematics'.",
+            "severity": "minor",
+            "fix": "`committee whose first stated objective is to check that ``the definitions and problem statement correspond with those which are standard in physics and mathematics''~\\cite{Douglas2026e}.`"
+          },
+          {
+            "location": "§7.4 (main.tex:628): \"Nine stop rules tie continuation to measurable checkpoints:\"",
+            "problem": "The paper says nine but lists seven. SR0 (decide the independence mix at release + 14 days) and SR8 (firewall breach) are missing. Separately, 'our first stop rule' (main.tex:490) is SR1.",
+            "evidence": "plan/PLAN.md:430-442 (SR0–SR8).",
+            "severity": "minor",
+            "fix": "Add `\\item choosing the clean-room/bridge/consume mix fourteen days after OpenAI's release;` and `\\item withdrawing the clean-room label from artefacts affected by a firewall breach.` At line 490, write `is our first stop rule (SR1).`"
+          },
+          {
+            "location": "§1 Contributions (main.tex:127-128) and §3.6 (main.tex:348): \"strictly weaker rungs\"",
+            "problem": "Lean proves only SUNExists → M7b → M7a. Strictness is neither proved nor provable in general: if SUNExists holds, all three are equivalent propositions.",
+            "evidence": "Statement.lean:221-232 (implication theorems only).",
+            "severity": "minor",
+            "fix": "Contributions: `an ordered ladder of weaker milestone statements (implied by \\lean{SUNExists}, proved in Lean).` §3.6: `We therefore define weaker rungs:`"
+          },
+          {
+            "location": "§4 Table 3 (main.tex:395): \"$SU(N)$ is path-connected, via Mathlib's connectedness of unitary groups\"",
+            "problem": "The theorem named su_connected states ConnectedSpace. Path-connectedness is su_pathConnectedSpace. Mathlib supplies only the local lemma Unitary.joined; path-connectedness of U(n) is proved in this project.",
+            "evidence": "OpenProblems.lean:46 (`ConnectedSpace (SU N)`). NonVacuity/Connected.lean:30-78 (joined_one_unitary, pathConnectedSpace_unitary built from `Unitary.joined`) and :123 (su_pathConnectedSpace).",
+            "severity": "minor",
+            "fix": "`$SU(N)$ is connected (via \\lean{su\\_pathConnectedSpace}): $U(N)$ is shown path-connected from Mathlib's \\lean{Unitary.joined}, and a determinant-correcting retraction maps it onto $SU(N)$. \\\\`"
+          },
+          {
+            "location": "Abstract (main.tex:58) and Table 3 (main.tex:393): \"the lattice partition function is positive\"",
+            "problem": "partitionFn_pos and expect_const carry an extra hypothesis, [SecondCountableTopology G], which the general statement does not supply.",
+            "evidence": "Sanity.lean:137-138 (section Gibbs variables include `[SecondCountableTopology G]`).",
+            "severity": "minor",
+            "fix": "Table: `The Wilson partition function is positive for second-countable $G$ (which includes every compact group with a faithful continuous unitary representation), so lattice expectations are genuine averages; $\\langle c\\rangle=c$. \\\\`"
+          },
+          {
+            "location": "§3.3 Axioms (main.tex:229): \"$\\Theta f=\\overline{\\rho(\\theta)f(\\theta\\,\\cdot)}$\"",
+            "problem": "The Lean definition uses ρ(θ⁻¹)ᵀ. This equals ρ(θ) for the diagonal tensorRep but not for a general ρ, and OSAxioms is defined for a general ρ. It is also inconsistent with the covariance formula at line 243.",
+            "evidence": "OS.lean:92-95 and :104-105 (osReflect = conjTest ∘ euclid ρ θ 0, i.e. conj(ρ(θ⁻¹)ᵀ f(θ⁻¹x))).",
+            "severity": "minor",
+            "fix": "`Write $\\Theta f=\\overline{\\rho(\\theta)^{\\mathsf T}f(\\theta\\,\\cdot)}$ with $\\theta$ time reflection, and for`"
+          },
+          {
+            "location": "§3.3 Axioms (main.tex:233): \"S_{n_j+n_l}\"",
+            "problem": "Index typo. The arguments run to g_{l,m_l}, so the order should be n_j + m_l.",
+            "evidence": "main.tex:233-234 and OS.lean:160-162 (S.S _ (reflectAppend ρ (F.m j) (G.m l))).",
+            "severity": "minor",
+            "fix": "`B(F,G)=\\sum_{j,l}\\overline{c_j}\\,d_l\\;S_{n_j+m_l}\\big(\\Theta f_{j,n_j},\\dots,\\Theta f_{j,1},`"
+          },
+          {
+            "location": "§1 (main.tex:108-112): \"the statement is where errors of meaning concentrate: the Navier--Stokes development proves its headline theorem\"",
+            "problem": "Bastounis2026 is about proof-level drift between Lean and the paper, not a statement error, so it does not illustrate the stated thesis. The parenthetical sends readers to note 01 for the formal-conjectures fact, which is established in notes 03 and 04.",
+            "evidence": "notes/03:320 (Bastounis 'do not claim … that the headline Lean theorem fails'). notes/03:374 and :651 and notes/04:48 (formal-conjectures has no YM file).",
+            "severity": "minor",
+            "fix": "`A Lean proof certifies only the theorem that was stated, not the paper's argument: the Navier--Stokes development proves its headline theorem through lemmas that differ from the paper's~\\cite{Bastounis2026}. Errors of meaning concentrate in the statement: a public candidate ...` and change the parenthetical to `(library notes~01 and~03)`."
+          },
+          {
+            "location": "§5.2 Minor: documentation (main.tex:462): \"forces $\\|Z_k\\|\\sim a_k^{-4}g_0^{-2}$\"",
+            "problem": "The 'up to logarithms' qualifier is dropped. Both the finding and the Lean docstring say the scaling holds only up to logarithms, because of anomalous dimensions.",
+            "evidence": "Lattice.lean:17-18 ('like a_k⁻⁴ g₀⁻² up to logarithms (anomalous dimensions)'). Review finding LAT-3 proposed fix.",
+            "severity": "minor",
+            "fix": "`any non-trivial limit forces $\\|Z_k\\|\\to\\infty$, like $a_k^{-4}g_0^{-2}$ up to logarithms.`"
+          },
+          {
+            "location": "§5.1 Method (main.tex:425, 431): \"public formalizations~\\cite{Cherkis2026,Yin2026,Douglas2026c}\"; \"approach advocated in~\\cite{Mei2026}\"",
+            "problem": "The lens prompt named OSforGFF, PhysLean, openai/ten-proofs and openai/math. No reviewer compared the statement with mrdouglasny/lgt (Douglas2026c); it appears only as text read from note 10. The review design never references Mei2026, so 'This follows' overstates the lineage.",
+            "evidence": "dev/workflows/ym-statement-review-wf_6798a78b-95c.js:52 (clay-comparison prompt). grep of the 61 review transcripts: 'mrdouglasny/lgt' has 0 hits; 'lgt' appears only in quoted note-10 text. 'Mei' is absent from the script.",
+            "severity": "minor",
+            "fix": "`\\item comparison with the Clay text and with public formalizations~\\cite{Cherkis2026,Yin2026,OpenAI2026m,OpenAI2026j};` and `refuted. This is in the spirit of the mechanical-verification-first approach of~\\cite{Mei2026}.`"
+          },
+          {
+            "location": "§7.5 (main.tex:652): \"publishing only after machine checking and human review\"",
+            "problem": "As worded, this conflicts with the present deposit, which §9 says no human expert has reviewed. The plan's commitment applies to proof results.",
+            "evidence": "PLAN.md:453 ('Results go through arXiv plus code, after Comparator and human review'). main.tex:729 ('No human domain expert has reviewed this work').",
+            "severity": "minor",
+            "fix": "`\\item publishing proof claims only after machine checking and human review, with no press releases.`"
+          },
+          {
+            "location": "§1 (main.tex:114): \"A carefully reviewed, pre-registered statement, fixed before the release\"",
+            "problem": "The packaged plan says pre-registration is still to come, and for v0.3. The paper calls v0.2.0 pre-registered without saying what the pre-registration consists of.",
+            "evidence": "plan/PLAN.md:124 ('A0. Pre-register v0.3 now, before OpenAI's release. Timestamped hash…'). main.tex:39 (version 0.2.0).",
+            "severity": "minor",
+            "fix": "`A carefully reviewed statement, pre-registered by this timestamped deposit (version 0.2.0) before the release of OpenAI's formalization, is therefore useful whatever the status of that proof.` Also update PLAN.md A0 to match."
+          },
+          {
+            "location": "Title/§10 metadata (main.tex:20, 739): \"accompanying GitHub repository and its Zenodo archive\"",
+            "problem": "Several metadata gaps. The repository URL is not given, although .zenodo.json names it. main.pdf has no Title or Author metadata. lakefile.toml says version 0.1.0 while the paper says 0.2.0.",
+            "evidence": "pdfinfo main.pdf shows no Title or Author fields. .zenodo.json related_identifiers: https://github.com/betterfuture2030/yang-mills-lean. lean/YangMills/lakefile.toml:2 (version = \"0.1.0\").",
+            "severity": "minor",
+            "fix": "Add `\\hypersetup{pdftitle={Yang--Mills Existence and Mass Gap in Lean 4},pdfauthor={Peter Lowes}}`. Change §10 to `The complete package is at \\url{https://github.com/betterfuture2030/yang-mills-lean} and in its Zenodo archive:`. Set lakefile.toml to version = \"0.2.0\"."
+          },
+          {
+            "location": "§9 (main.tex:720): \"The orchestration scripts are included in the repository (\\lean{dev/workflows/})\"",
+            "problem": "There are two issues. Privacy (low risk): the published scripts hard-code the author's local home path. Reproducibility: the review and scale statistics in §5 and §9 (agent counts, tokens, the 13/1 verdicts) come from run records that are not in the package, so readers cannot check them.",
+            "evidence": "dev/workflows/*.js each contain '<repo-root>' (e.g. ym-research-library-wf_f5e14fa3-a3b.js:12). There are no emails or other project names. The statistics come from <session-dir>/workflows/wf_*.json (agentCount, totalTokens, totalToolCalls, result.confirmed/refuted), which are absent from the repo.",
+            "severity": "minor",
+            "fix": "Replace the absolute ROOT paths with `const ROOT = '<repo-root>'` (or a relative path) in the published copies. Add the run summaries as dev/workflows/runs/*.json and cite them: `The orchestration scripts and their run summaries (agent counts, token and tool-call totals, verified and refuted findings) are included in the repository (\\lean{dev/workflows/}).`"
+          }
+        ]
+      }
+    },
+    {
+      "task": "math",
+      "result": {
+        "checked": "Read-only review of <repo-root>/paper/main.tex (I checked the flagged phrases against the built main.pdf), set against OS.lean, Lattice.lean, Statement.lean and OpenProblems.lean, library note 01 (sections 2.4-2.9), notes 05, 08 and 09, PROBLEM.md, PLAN.md and critique-mass-gap.md. I also ran the Lean axiom audit: every proved theorem depends only on propext, Classical.choice and Quot.sound, and the five open items also depend on sorryAx. That matches the paper.\n\nChecked and correct (with the derivations I redid):\n(1) The OS E0-E4 description, the OS I Lemma 8.8 error, and the E0' formula.\n(2) The reflection-positivity form, including the field-index factor rho(theta). On the lattice, F_{0i} changes sign under the reflection, so each time index gives a factor -1, which matches theta⊗theta⊗theta⊗theta. One subscript typo is listed below.\n(3) The cluster axiom, and the a=0 collapse argument: exact factorization gives B_T≡0, so the Hilbert space is CΩ and NonTrivial cannot hold.\n(4) The mass-gap Proposition is correct. B_T(F,G)=<(1-P)F^,(1-P)G^>, e^{-tH} commutes with P, a bound on a dense subset extends to the operator norm, and the spectral theorem finishes it. Vacuum uniqueness is a consequence, not an extra hypothesis. H>=0 and the semigroup come from reconstruction (E0', E1, E2). The step that needs justifying is density; see below. m<infinity does follow from NonTrivial.\n(5) Wilson action: with U_p≈exp(i a^2 g0 F), beta(1-(1/N)Re tr U_p)≈a^4 tr F_{μν}^2 when beta=2N/g0^2. Summing gives (1/4)∫F^aF^a. The lattice field strength is ≈ a^2 g0 F, and (U-U†)/2i is already Hermitian.\n(6) b0=11N/(3(4π)^2) and b1=34N^2/(3(4π)^4) are right for beta(g)=μdg/dμ=-b0g^3-b1g^5. The asymptotic-scaling expression converges: from aΛ=(b0g^2)^{-b1/(2b0^2)}e^{-1/(2b0g^2)}, 1/g0^2 = 2b0 log(1/a) + (b1/b0) log log(1/a) + const + o(1).\n(7) ShortDistanceAF: g^2≈1/(2b0 log(μ/Λ)) and the log^{-2} power are right. Θ is renormalization-group invariant, and two-loop corrections only multiply by (1+O(loglog/log)). The scalar direction v lies in TFFSpace, is O(4)-invariant, and contracts to 2 tr F_{μν}F_{μν} ∝ F^aF^a ∝ Θ. The λ^8 log^2 scaling with D_λ is consistent, and free gluons are excluded.\n(8) The 21-dimensional decomposition (0,0)+(0,0)+(1,1)+(2,0)+(0,2) is correct.\n(9) The OS1-failure argument in note 01 is correct, and in fact more robust than its premise. A cleaner proof: the Cauchy estimate gives E[φ(g_ε)^2]=O(ε^{8/p})≤O(ε^4). Cauchy-Schwarz with a translate h of g, plus the separated-point asymptotics, gives E[φ(g_ε)^2] ≳ log^{-2}(1/ε). So OS1 fails for any field of scaling dimension >2, and in particular for any theory satisfying ShortDistanceAF. The paper drops the hedge (see findings).\n(10) The O(4) obstruction reduction is correct when the other links are frozen to the identity. The plaquette is Q_yQ_x^{-1}, Re tr = 2 q_x·q_y, the weight is exp(beta Σ q_x·q_y), and ordering at large beta is the Fröhlich-Simon-Spencer result. The paper's hedge is adequate (even conservative), but its wording is imprecise.\n(11) The claims that periodic limits can be mixtures and that cluster is equivalent to a unique vacuum are right in substance, but the wording needs fixing.\n\nNo critical (false) mathematical claim found. One claim is materially overstated (the φ^4_4 statement); the rest are hedging and precision fixes.",
+        "findings": [
+          {
+            "location": "Sec. 5 (Research landscape), Constructive QFT bullet: \"Triviality of $\\varphi^4_4$ ... shows that non-triviality in four dimensions requires asymptotic freedom\"",
+            "problem": "Materially overstated. Aizenman–Duminil-Copin prove marginal triviality of the scaling limits of critical 4D Ising and single-component nearest-neighbour lattice φ^4_4 models. They prove nothing about 4D theories in general. That non-triviality in 4D requires asymptotic freedom is a heuristic, not a theorem.",
+            "evidence": "library/notes/08-constructive-qft-and-renormalization-tools.md:28 calls AF \"the only *known* route to a non-trivial 4D continuum limit [H: strongly supported, not a theorem]\". The same line has a verifier note that ADC does not cover n≥2 components at large coupling. refs.bib:521 gives the title as 'Marginal triviality of the scaling limits of critical 4D Ising and φ^4_4 models'. note 09:160 has the same scope.",
+            "severity": "major",
+            "fix": "\\item Aizenman and Duminil-Copin proved that scaling limits of critical four-dimensional Ising and (single-component, nearest-neighbour) lattice $\\varphi^4_4$ models are Gaussian~\\cite{Aizenman2021}. With the perturbative evidence, this supports, but does not prove, the expectation that a non-trivial four-dimensional theory must be asymptotically free."
+          },
+          {
+            "location": "Sec. 2.2 \"their regularity axiom fails for dimension-four composite fields such as $\\tr F^2$\"; Table 2 row \"OS1 fails for $\\tr F^2$ in 4D\"",
+            "problem": "The math is correct and robust: OS1 fails for any measure-defined field of scaling dimension >2. But the paper states it unhedged, while note 01 labels it an in-house derived claim whose YM premise is heuristic, and it has no published source. In Table 2, 'equivalent to OS' is also a confusing direction label: E0' is OS II's own condition.",
+            "evidence": "library/notes/01-problem-definition.md:135 says \"Derived here (rigorous sketch, should be double-checked...)\" and \"The premise is still the heuristic AF short-distance law, so the conclusion is a derived claim, not a theorem.\" My check: OS1 plus the Cauchy estimate gives E[φ(g_ε)^2]=O(ε^{8/p})≤O(ε^4). Cauchy–Schwarz with a translate h of g and the separated-point kernel gives E[φ(g_ε)^2] ≥ |E[φ(g_ε)φ(h_ε)]| ≍ log^{-2}(1/ε). The two bounds contradict each other.",
+            "severity": "minor",
+            "fix": "Sec. 2.2: \"The Glimm--Jaffe measure axioms~\\cite{Glimm1987} are not suitable here. A short argument of ours (library note~01, \\S2.6; not a published result) shows that their regularity axiom OS1 is incompatible with any field whose separated-point two-point function is as singular as the expected $|x|^{-8}\\log^{-2}(1/|x|)$ behaviour of $\\tr F^2$ (indeed with any field of scaling dimension $>2$), and so with any theory satisfying \\lean{ShortDistanceAF}.\" Table 2 row: \"E0$'$ (as in OS~II) rather than Glimm--Jaffe OS1 & same as OS~II & OS1 is incompatible with the expected short-distance behaviour of $\\tr F^2$ (\\S2.2)\"."
+          },
+          {
+            "location": "Sec. 3.3, Proposition proof sketch: \"Reconstruction maps ordered-positive $F$ to a dense set of vectors\"; Sec. 7 Limitations",
+            "problem": "The Proposition is correct. Vacuum uniqueness and H≥0 are not missing hypotheses: uniqueness is a conclusion, and H≥0 comes from reconstruction. Three gaps remain. (a) The density of slab-product vectors in the OS Hilbert space, and the equivalence of slab-product reflection positivity with OS's E2 on S_+, are asserted without justification. Both are open, unformalized obligations in PROBLEM.md, and so is this Proposition. The Limitations section omits all of them, although Sec. 3.1/3.2 assert that OS II reconstruction applies. (b) 'The Hamiltonian' means the one on the OS space generated by the 21 fields. (c) Lorentz covariance is not needed for JW's spectral condition on H; it is needed only for the mass-shell form (note 01, Prop. A).",
+            "evidence": "PROBLEM.md:161-162 lists open obligations \"Equivalence of E2 on slab products with OS's 𝓢₊ form ... | classical | large\" and \"HasMassGap ⇔ operator gap after reconstruction | classical | moderate to large\". main.tex:656-671 (Limitations) does not mention them. OS.lean header: \"Products of such functions span a dense subspace\" is stated without proof.",
+            "severity": "minor",
+            "fix": "Proof sketch, first sentence: \"Reconstruction maps ordered-positive $F$ to vectors $\\hat F$ in the OS Hilbert space $\\mathcal H$ generated by the fields, with $\\langle\\hat F,\\hat G\\rangle=B(F,G)$ and $\\widehat{T_tG}=e^{-tH}\\hat G$, $H=H^*\\ge0$. These vectors are dense, because finite sums of products of slab-supported test functions are dense in OS's $\\Sch_+$; this density step, like the proposition itself, is not yet formalized.\" After the proof, replace \"With Lorentz covariance (from OS~II), this is the Jaffe--Witten gap.\" with \"This is the Jaffe--Witten gap on $\\mathcal H$; with Lorentz covariance (from OS~II) it is equivalent to a gap in the mass operator.\" Add to Limitations: \"\\item The bridge results (that slab-product reflection positivity is equivalent to OS's E2, so OS~II reconstruction applies, and Proposition~3.1) are established only in sketch form, not in Lean.\""
+          },
+          {
+            "location": "Sec. 6.2, Track E: \"a slab of $SU(2)$ links with the other links frozen reduces to the 3D $O(4)$ model, which orders\"",
+            "problem": "The reduction is exact only for the time-like links of a height-one slab, with every other link frozen to the identity (or to a pure-gauge configuration). With generic frozen links you get an O(4) model in an SO(4) background, which can be frustrated. The 3D O(4) model orders only for beta above about 0.94; it is rigorous at large beta by Fröhlich–Simon–Spencer. The argument concerns conditional measures under special boundary conditions and implies no bulk transition; the paper should say so, to avoid echoing Grady's disputed claim. The 'heuristic' hedge itself is adequate and conservative (the critique calls it rigorous up to the constant).",
+            "evidence": "plan/critique-mass-gap.md:118-127: \"Freeze every other link to I ... U_p=Q_xQ_y^{-1} ... 3D O(4) model at β_O(4)=β_LQCD ... transition at β_O(4)≈0.936 ... O1 concerns conditional measures on thin sets, not the bulk. It does not imply a bulk transition.\" My check: Re tr(Q_xQ_y^{-1})=2q_x·q_y, so the conditional weight is exp(β Σ q_x·q_y) for S=βΣ(1-½Re tr U_p).",
+            "severity": "minor",
+            "fix": "\"A finite-size criterion that is uniform over all volumes and boundary conditions cannot hold in four dimensions beyond bare coupling of order one. Take the time-like $SU(2)$ links of a height-one slab and freeze all other links to the identity. The conditional measure is then exactly the 3D $O(4)$ model at the same $\\beta$, which has long-range order for large $\\beta$ (numerically for $\\beta\\gtrsim0.94$, i.e.\\ $g_0^2\\lesssim4.3$). This is our own unrefereed argument, not a theorem. It concerns conditional measures and implies no bulk phase transition. It directs any certificate approach to cube-restricted criteria.\""
+          },
+          {
+            "location": "Sec. 4.2, Minor: documentation: \"any non-trivial limit forces $\\|Z_k\\|\\sim a_k^{-4}g_0^{-2}$\"",
+            "problem": "This is stated as forced, but it is a perturbative heuristic and depends on the channel. The trace-anomaly scalar (g_0^2 F^2 is RG-invariant) needs Z~a^{-4} without g_0^{-2}; that is exactly what ShortDistanceAF's log^{-2} requires, since a^{-4}g_0^{-2} would make that channel diverge like log^2(1/a). The stress-tensor channel needs ~a^{-4}g_0^{-2}, and the (2,0)+(0,2) channels carry anomalous dimensions. The Lean documentation hedges 'up to logarithms', and g_0^{-2}~log(1/a) is itself such a logarithm.",
+            "evidence": "Lattice.lean header: \"a non-trivial limit forces ‖Z_k‖ → ∞ like a_k⁻⁴ g₀⁻² up to logarithms (anomalous dimensions)\". Derivation: T_lat≈a^4 tr F_geo^2, and <ΘΘ>~ḡ^4(1/|x|)|x|^{-8}, so Z_scalar~a^{-4}; for the stress tensor T_can=g_0^{-2}F_geoF_geo, so Z~a^{-4}g_0^{-2}.",
+            "severity": "minor",
+            "fix": "\\item \\textbf{Minor: documentation.} The renormalization matrices were described as ``finite''. Any non-trivial limit is expected to need $\\|Z_k\\|\\to\\infty$, like $a_k^{-4}$ times channel-dependent powers of $\\log(1/a_k)$ (perturbatively $a_k^{-4}$ for the trace-anomaly scalar and $a_k^{-4}g_0^{-2}$ for the stress tensor)."
+          },
+          {
+            "location": "Sec. 3.6, Milestone ladder: \"Because \\lean{IsWilsonLimit} uses periodic tori, the cluster property amounts to uniqueness of the vacuum\"",
+            "problem": "The causal claim is wrong. Given the other OS axioms, cluster is equivalent to a unique vacuum in general (OS I/II); periodic tori have nothing to do with that equivalence. The periodic-torus point is different: IsWilsonLimit allows no boundary condition, so the periodic limit itself must have a unique vacuum, and no pure phase can be selected.",
+            "evidence": "library/notes/01-problem-definition.md:93 (\"R6 holds iff the vacuum is unique\") and :112 (\"with E4, also R6\"). PLAN.md:81-83.",
+            "severity": "minor",
+            "fix": "\"Given the other axioms, the cluster property is equivalent to uniqueness of the vacuum. Since \\lean{IsWilsonLimit} uses periodic tori with no boundary conditions, this means the periodic limit itself must have a unique vacuum.\""
+          },
+          {
+            "location": "Sec. 6.1: \"limits of periodic tori are in general mixtures whose ergodic components are not themselves periodic limits\"",
+            "problem": "Overstated. Periodic limits can be non-extremal mixtures (for example the low-temperature Ising model), and then their components need not be periodic limits. They are not mixtures 'in general', and for 4D Yang–Mills a unique vacuum is expected. The point is only that this is unproven.",
+            "evidence": "plan/critique-constructive-qft.md:111 (\"If the vacuum is not unique, S fails Cluster ... every periodic subsequence gives ½(μ⁺+μ⁻)\").",
+            "severity": "minor",
+            "fix": "\"The cluster clause requires vacuum uniqueness for periodic limits. Limits of periodic tori can be non-trivial mixtures (as for the low-temperature Ising model, where every periodic limit is $\\tfrac12(\\mu^++\\mu^-)$), and the ergodic components of such a mixture need not be periodic limits. Ruling this out needs infrared input.\""
+          },
+          {
+            "location": "Sec. 3.2, display defining $B(F,G)$: \"$S_{n_j+n_l}\\big(\\Theta f_{j,n_j},\\dots,\\Theta f_{j,1}, g_{l,1},\\dots,g_{l,m_l}\\big)$\"",
+            "problem": "Index typo. G's monomials have m_l factors, so the subscript must be n_j+m_l. G is also never defined. The order and the Θ-conjugation are otherwise correct (Θf^* reversed, matching OS E2 and Lean reflectAppend).",
+            "evidence": "main.tex:233-234; OS.lean rpForm/reflectAppend; the PDF shows the same typo.",
+            "severity": "minor",
+            "fix": "\"and for finite linear combinations $F=\\sum_j c_j\\,\\varphi(f_{j,1})\\cdots\\varphi(f_{j,n_j})$ and $G=\\sum_l d_l\\,\\varphi(g_{l,1})\\cdots\\varphi(g_{l,m_l})$ of ordered-positive monomials define \\[B(F,G)=\\sum_{j,l}\\overline{c_j}\\,d_l\\;S_{n_j+m_l}\\big(\\Theta f_{j,n_j},\\dots,\\Theta f_{j,1},g_{l,1},\\dots,g_{l,m_l}\\big).\\]\""
+          },
+          {
+            "location": "Sec. 3.2 bullet: \"\\eqref{eq:E0prime} stated literally: for each $n$, $S_n$ agrees on disjointly supported products\"",
+            "problem": "This is not literal. It is an equivalent reformulation: OS II bound S_n on S_0(R^{4n}) in OS's norm, while the Lean bounds T_n on all of S((R^4)^n) in a different seminorm. Equivalence needs Hahn–Banach, density of disjointly supported products in S_0, and absorbing n^{O(ns)} norm constants into (n!)^β.",
+            "evidence": "OS.lean header: \"Tₙ lives on 𝓢((ℝ⁴)ⁿ) rather than 𝓢₀; this is equivalent by Hahn–Banach, and sup- vs Euclidean-norm constants n^{O(ns)} are absorbed by (n!)^β\".",
+            "severity": "minor",
+            "fix": "\\item an equivalent form of \\eqref{eq:E0prime}: for each $n$, $S_n$ agrees on disjointly supported products with a distribution $T_n$ on $\\Sch((\\R^4)^n)$ obeying $|T_n(F)|\\le\\alpha(n!)^\\beta|F|_{ns}$ (equivalent to OS~II's condition on $\\Sch_0$ by Hahn--Banach and density of disjointly supported products, with norm-convention constants absorbed into $(n!)^\\beta$);"
+          },
+          {
+            "location": "Sec. 4.2, growth finding: \"That is the restriction of E0$'$ to products and is strictly weaker\"",
+            "problem": "Mis-described, and the strictness is unproved. A per-factor bound of order ns is implied by E0' on products (|f_1⊗…⊗f_n|_p ≤ ∏|f_k|_p), but it is not the restriction itself. No counterexample shows it is strictly weaker. The real defect is that Summers' product-to-E0' argument (appendix to OS II) needs per-factor norms of fixed order; order growing with n gives only order ~n^2 s.",
+            "evidence": "library/notes/01-problem-definition.md:112 (Summers appendix: E0' follows from |S_n(f_1⊗…⊗f_n)|≤σ_n∏|f_i|_r with fixed r).",
+            "severity": "minor",
+            "fix": "\\item \\textbf{Major: growth weaker than E0$'$.} The first version bounded $S_n$ by products of per-factor Schwartz norms of order $n\\cdot s$. That bound follows from E0$'$ but is not known to imply it: the product-to-E0$'$ argument in the appendix to OS~II needs per-factor norms of fixed order. So OS~II's reconstruction theorem could not be invoked. Replaced by E0$'$ on configuration space."
+          },
+          {
+            "location": "Sec. 1 Contributions: \"an ordered ladder of strictly weaker milestone statements\"; Sec. 3.6: \"We therefore define strictly weaker rungs\"",
+            "problem": "Only the implications SUNExists→M7b→M7a are proved. Non-equivalence is not proved, and cannot be expected: if SUNExists is true, all the rungs are true and so equivalent as propositions.",
+            "evidence": "Statement.lean: only SUNExists.toM7b and SUNExistsM7b.toM7a are proved; the audit confirms these two only.",
+            "severity": "minor",
+            "fix": "Replace \"strictly weaker\" with \"logically weaker (implied by \\lean{SUNExists}, with the implications proved in Lean)\" in both places."
+          },
+          {
+            "location": "Table 2, row 1: \"Gap only on the cyclic space of $\\tr F F$ (C-even sector)\"",
+            "problem": "The parenthesis identifies the cyclic space of the tr F_{μν}F_{κλ} fields with the C-even sector. The cyclic space is contained in the C-even sector, since tr FF is C-even, but equality is unproven.",
+            "evidence": "PROBLEM.md:118 (C4: \"the gap is proved on the cyclic space of these fields\"); C-invariance of tr(F_1F_2) under F→-F^T.",
+            "severity": "minor",
+            "fix": "Gap only on the cyclic space of $\\tr F F$ (a subspace of the C-even sector)"
+          },
+          {
+            "location": "Sec. 3.4, ShortDistanceAF and AsymptoticScaling: \"correlator $\\propto g^4(|x|)\\,|x|^{-8}$\"; \"With $\\beta=2N/g_0^2$, $b_0=11N/(3(4\\pi)^2)$\"",
+            "problem": "The values and the log power are correct, but the conventions are incomplete. The beta-function convention that fixes b_0 and b_1 is never stated; β is used for the lattice coupling, the Callan–Symanzik function and the exponent in E0'; and g(|x|) should be the running coupling at scale 1/|x|.",
+            "evidence": "Derivation: Θ is RG-invariant, so <ΘΘ>=|x|^{-8}F(ḡ(1/|x|)) with F=cg^4+O(g^6), and ḡ^2=1/(2b_0 log(1/(|x|Λ))) gives log^{-2}. b_0, b_1 as given correspond to μdg/dμ=-b_0g^3-b_1g^5.",
+            "severity": "minor",
+            "fix": "\"... $\\Theta=(\\beta(g)/2g)F^a_{\\mu\\nu}F^a_{\\mu\\nu}$, with $\\beta(g)=\\mu\\,dg/d\\mu=-b_0g^3-b_1g^5+\\cdots$~\\cite{Collins1977}, has at leading order correlator $\\propto\\bar g^4(1/|x|)\\,|x|^{-8}$, where $\\bar g(\\mu)$ is the running coupling at scale $\\mu$; with $\\bar g^2(\\mu)\\sim1/(2b_0\\log(\\mu/\\Lambda))$ this gives ...\". Optionally rename the E0$'$ exponent to $\\gamma$."
+          },
+          {
+            "location": "Sec. 5, Mass-gap mechanisms: \"Semiclassical gapped regimes are known on compactified geometries~\\cite{Tanizaki2022}\"",
+            "problem": "'Known' reads as rigorous. These are controlled physics-level semiclassical analyses, not theorems, and their link to R^4 is a conjecture.",
+            "evidence": "library/notes/09-mass-gap-mechanisms.md:467 (\"(R) None rigorous. The semiclassical regime is controlled in the physicist's sense\"); :58 and :464 (adiabatic continuity is conjectural).",
+            "severity": "minor",
+            "fix": "\\item Controlled (physics-level, non-rigorous) semiclassical analyses exhibit gapped, confining regimes on compactified geometries~\\cite{Tanizaki2022}; their connection to $\\R^4$ rests on an adiabatic-continuity conjecture."
+          },
+          {
+            "location": "Sec. 6.1: \"If OpenAI's claim is correct, then: ... a Ba{\\l}aban-type renormalization group ... can be carried to infinite volume\"",
+            "problem": "The second and third bullets do not follow from correctness alone. They follow only if the unreleased proof is, as reported, built on Wilson's lattice and Ba{\\l}aban's RG and covers fermions.",
+            "evidence": "PROBLEM.md:38 (\"Built on Wilson's lattice and Balaban's RG ... Gauge groups, axioms and observables not yet public\").",
+            "severity": "minor",
+            "fix": "\"If OpenAI's claim is correct and, as reported, its proof is built on Wilson's lattice and Ba{\\l}aban's renormalization group and covers fermions, then:\""
+          }
+        ]
+      }
+    },
+    {
+      "task": "disclosure",
+      "result": {
+        "checked": "Scope: disclosure, ethics, privacy and publication norms for paper/main.tex (md5 9a278c21…, unchanged since 08:45), paper/refs.bib, the built PDF, and the deposit package. I did not modify any file.\n\nFive areas check out:\n\n1. **No model version string in the paper.** I searched main.tex and the PDF text (pdftotext) for model-ID patterns. Only product and company names appear (\"Anthropic's Claude\", \"Claude Code\"), plus the cited repository title \"Claude-driven\". The package notes name other people's models (Witten, Aronow–Lopatto), which is fine. Two plan critiques were rewritten at 13:22, while I was reviewing, to drop this project's model string.\n\n2. **Disclosure numbers match the workflow run records** (`<session-dir>/workflows/wf_*.json`):\n\n   | Workflow | Agents | Tokens | Tool calls | Wall clock |\n   |---|---|---|---|---|\n   | Research library | 24 | 9,142,475 | 2,560 | 119 min |\n   | Statement review | 20 | 3,639,596 | 272 | 24 min |\n   | Plan critique | 5 | 2,025,700 | 194 | 28 min |\n   | Non-vacuity proofs | 3 | 574,347 | 70 | 12 min |\n\n   All 52 subagents ran the same single model.\n   - The review process the paper describes (read-only reviewers, scratch Lean, verifiers told \"default to refuted\") matches `dev/workflows/ym-statement-review-wf_6798a78b-95c.js`.\n   - The training-cutoff statement is consistent with the model used.\n\n3. **Lean audit re-run.** `lake env lean YangMills/Audit.lean` gives:\n   - every proved theorem in Table 3 depends on [propext, Classical.choice, Quot.sound];\n   - clay_yang_mills, clay_existence, su_yang_mills_exists, su_yang_mills_mass_gap and os_nonTrivial_fullField_consistent also depend on sorryAx.\n\n4. **Quotes checked against fetched sources.**\n   - The KITP committee PDFs: \"definitions and problem statements correspond with those that are standard in physics and mathematics\" is verbatim from the 3 Nov statement. \"among the important elements\" is verbatim from the first statement.\n   - AGMAI pages fetched: the 26 Oct \"Recommendation for Immediate Release of Yang–Mills AI Output\", and the 29 Sep general guidelines with the pathway 2B list.\n   - All quotes in the paper are short.\n\n5. **Privacy and committee process.**\n   - The paper contains no emails or private data. The committee email in note 02 is the committee's own published contact.\n   - The paper respects the committee's process: no contact, no pressure, accurate quotes, and the acknowledgements disclaim consultation.\n   - The paper correctly says it is not a proof and has had no human expert review, in the abstract, contributions, limitations and Section 9.\n\n**Package state (it changed while I was reviewing, 13:20–13:22).** LICENSE files, .zenodo.json, CITATION.cff, dev/workflows/, scripts/fetch_pdfs.sh and library/pdfs/MANIFEST.tsv now exist. .gitignore excludes library/pdfs/*.pdf and the build logs. So the paper's claims \"workflow scripts included\" and \"third-party PDFs not redistributed\" hold only if the deposit is built from git.\n\n**Wider checks.**\n- A web search found no public release of OpenAI's Lean proof as of today.\n- The Zenodo API confirms an earlier candidate statement, record 23650415. The paper does not cite it; see the critical finding.",
+        "findings": [
+          {
+            "location": "§1 'Why a formal statement matters now': \"a public candidate Lean statement of the Yang--Mills problem is self-described as incomplete\"; also Title/Contributions item 1",
+            "problem": "The paper does not cite the closest prior work. An earlier public candidate Lean statement was deposited on Zenodo on 25 Oct 2026, before this project began. It has the same architecture as this paper: a Wilson lattice-limit variant, an axiomatic variant with a 'Yang–Mills fingerprint', and their conjunction. Its field content refers to the 21 components of Tr F F. It was also written by Claude agents under its author's direction. The project's own library note 01 reviewed it before the v0.1 statement review began (note 01 last modified 21:47; review started 22:08). The paper mentions only lean-dojo. Readers are left believing no comparable statement exists, and the 'pre-registered candidate statement' contribution is presented without attribution.",
+            "severity": "critical",
+            "fix": "Replace the sentence with: \"a public candidate Lean statement of the Yang--Mills problem is self-described as incomplete and is satisfied by a toy model~\\cite{Leandojo2026}. A second candidate, deposited on Zenodo on 25 October 2026~\\cite{Remondiere2026}, combines a Wilson lattice-limit variant with an axiomatic variant carrying a Yang--Mills `fingerprint', declares its field content partial with reference to the 21 components of $\\tr F_{\\mu\\nu}F_{\\rho\\sigma}$, and, like the present work, was written by Claude agents under its author's direction. Our statement shares these main design elements; library note~01 reviewed it before our version~0.1 was reviewed. The community collection of formal conjectures~\\cite{DeepMind2026} contains no Yang--Mills statement (see also library note~01); ...\" In Contributions item 1, after \"(Section~\\ref{sec:statement})\" add \", whose overall design follows~\\cite{Remondiere2026},\". Add to refs.bib: @misc{Remondiere2026, author={R{\\'e}mondi{\\`e}re, K.}, title={{ClayYM: a candidate Lean 4 statement of the Yang--Mills existence and mass gap problem, with compiled guards against fake models}}, howpublished={Zenodo, version 1.1.0, 25 Oct 2026}, year={2026}, doi={10.5281/zenodo.23650415}, url={https://github.com/AIdevsmartdata/yang-mills-lean-statement}}",
+            "evidence": "Zenodo API https://zenodo.org/api/records/23650415 returns: title 'ClayYM: a candidate Lean 4 statement…', creator Rémondière, Kévin, published 2026-10-25, v1.1.0, variants A/B/AB, partial field content citing the 21 components of Tr F F, AI-use section naming Claude. library/notes/01-problem-definition.md:53 and ref 54 (:428). library/references.bib:6180 (Remondiere2026). grep finds no 'Remondiere' or 'AIdevsmartdata' in main.tex or refs.bib. Statement-review workflow start time is 2026-11-05 22:08 CST (wf_6798a78b-95c.json)."
+          },
+          {
+            "location": "§9 opening: \"intended to meet the transparency expectations articulated for AI-assisted mathematics\"",
+            "problem": "The paper overstates its compliance with the AGMAI guidance. The AGMAI 29 Sep guidelines ('Responsible Release of AI-Generated Mathematics', pathway 2B) list: model name, prompts, a summarized chain of thought, time taken, estimated compute cost, and per-problem documentation. The paper gives:\n- only the model family, with the version available on request;\n- only the subagent prompts (dev/workflows), not the author's instructions to the orchestrating session;\n- no reasoning summaries, no wall-clock times and no cost;\n- no token use for the orchestrating session, which wrote the Lean statement, PROBLEM.md, PLAN.md and the paper.\nThe guidance is also mainly addressed to AI labs. The citation is wrong: it points to the AGMAI homepage, not the guidelines, and the howpublished field is garbled (it prints as 'and 26 Oct 2026, 2026').",
+            "severity": "major",
+            "fix": "Replace the opening sentence with: \"This disclosure follows, as far as they apply to an individual's project, the disclosure items that the Advisory Group on Mathematics and AI lists for AI-generated mathematics (its pathway~2B)~\\cite{AGMAI2026a}: model, prompts, time, compute and how AI was used. Provided here: the model family and environment; the prompt given to every subagent, in the workflow scripts (\\lean{dev/workflows/}); and wall-clock times and subagent token counts. Not included in this deposit: the author's natural-language instructions to the orchestrating session, that session's transcript and token count, summaries of the models' reasoning, and monetary cost.\" In refs.bib, add @misc{AGMAI2026a, author={{Advisory Group on Mathematics and AI (AGMAI)}}, title={{Responsible Release of AI-Generated Mathematics (General Guidelines)}}, howpublished={29 Sep 2026}, year={2026}, url={https://agmai.org/general-sep29/}} and change AGMAI2026 to title={{Recommendation for Immediate Release of Yang--Mills AI Output}}, howpublished={Statement, 26 Oct 2026}, url={https://agmai.org/#request-immediate-release}.",
+            "evidence": "WebFetch https://agmai.org/general-sep29/ gives the pathway 2B list, aimed 'mainly at AI labs'. WebFetch https://agmai.org/ gives the statement titles and anchors. library/notes/02-openai-ym-claim.md:188,488. dev/workflows/*.js hold only subagent prompts. PDF reference [107] prints 'and 26 Oct 2026, 2026. URL https://agmai.org/'."
+          },
+          {
+            "location": "§9 'What the human author did': \"The author did not hand-write the mathematics, the Lean code or the prose.\"",
+            "problem": "The disclosure does not say whether, or how far, the author read or checked the AI output, or what expertise the author has. It also does not say that no text-overlap (plagiarism) check was run. 'No human domain expert has reviewed this work' leaves unclear whether the author counts as one. ICMJE asks authors to carefully review AI output, to be able to assert there is no plagiarism, and to check attribution of quoted material. COPE holds authors accountable for AI-produced parts. Without this paragraph readers cannot tell how much human checking exists. 'Takes responsibility for publication' is not a review statement.",
+            "severity": "major",
+            "fix": "Insert after the author's bullet list (the author must choose the bracketed options truthfully): \"\\paragraph{Human review.} The author read [the whole of this paper / the abstract, introduction and Sections~8--9] before deposit. The author [is not / is] trained in constructive quantum field theory or in Lean, and could not independently check the mathematics, the physics or the Lean code. For these the paper relies on the Lean kernel (Section~\\ref{sec:checked}) and on the AI review described in Section~\\ref{sec:review}. No text-overlap (plagiarism) check was run on the AI-generated text. Quotations were checked against their sources by AI agents only. Corrections are welcome as issues on the GitHub repository.\"",
+            "evidence": "main.tex:688-696, 729. The paper-verify workflow tasks are citations, claims, math and disclosure; there is no overlap check (dev/workflows/ym-paper-verify-wf_946746b0-7dc.js:21-25). ICMJE Recommendations, AI-assisted technology section. COPE position statement on authorship and AI tools."
+          },
+          {
+            "location": "§7.5 Independence and ethics: \"publishing only after machine checking and human review, with no press releases\"",
+            "problem": "The paper contradicts itself. Its programme commits to publishing only after human review, but the paper is being deposited publicly with no human expert review. Section 9 says so ('No human domain expert has reviewed this work'). PLAN §7 has the same commitment ('after Comparator and human review'), and PLAN §2 A1 makes expert sign-off a separate future step.",
+            "severity": "major",
+            "fix": "Replace the bullet with: \"\\item publishing any claimed proof, or any formal result beyond this candidate statement, only after Comparator checking and review by human experts, with no press releases. This paper itself is released without human expert review (Section~\\ref{sec:ai}), as a candidate statement and a plan, not as a result.\"",
+            "evidence": "main.tex:652 vs main.tex:729-730 and 659-661. plan/PLAN.md:453 and :128 (A1 Expert sign-off)."
+          },
+          {
+            "location": "Title, Abstract, §1: \"A carefully reviewed, pre-registered statement, fixed before the release\"",
+            "problem": "'Carefully reviewed' implies more than AI-only review, which is all that took place. 'Pre-registered' and 'fixed' have no verifiable anchor:\n- the paper gives no commit hash, file hashes or timestamp;\n- the repository has no commits yet;\n- PLAN A0 itself requires a 'timestamped hash';\n- the plan expects the targets to change: 'frozen after the skeleton exists (week 4)', with spec decisions pending 'before the v1.0 freeze';\n- an earlier timestamped candidate statement exists (Remondiere2026).",
+            "severity": "major",
+            "fix": "Replace the §1 sentence with: \"An AI-reviewed candidate statement, deposited with a timestamp and file hashes before the release of OpenAI's formalization, is therefore useful whatever the status of that proof. We call version~0.2.0 \\emph{pre-registered} only in this limited sense. At commit \\lean{<commit>}, its statement files \\lean{OS.lean}, \\lean{Lattice.lean}, \\lean{SU.lean} and \\lean{Statement.lean} have SHA-256 hashes \\lean{<h1>}, \\lean{<h2>}, \\lean{<h3>}, \\lean{<h4>}. The date of the Zenodo deposit records when they became public. Any later version will be published with a diff against 0.2.0 and the reason for each change.\" Fill in the placeholders from the tagged commit before deposit.",
+            "evidence": "git status: \"current branch 'master' does not have any commits yet\". plan/PLAN.md:104, :124-125 (A0 'Timestamped hash'), :466-470 (decisions pending before the v1.0 freeze). main.tex:114-115."
+          },
+          {
+            "location": "Abstract (iv): \"A verified research library (11 notes, 666 bibliography entries)\"; Contributions item 4; .zenodo.json description",
+            "problem": "'Verified' overstates the library. In the project's own usage it means only that an AI agent confirmed a reference exists and its metadata is right. The library index itself says it 'does not mean the mathematics was checked'. Of the 666 entries, 18 are unverified or mixed. Key primary sources were not read: no Bałaban paper, and not Douglas's 2026 review. A reader of the abstract will take 'verified' to mean checked content.",
+            "severity": "major",
+            "fix": "Abstract: \"(iv)~A research library compiled and cross-checked by AI agents (11 notes; 666 bibliography entries whose existence and metadata were checked, 18 of them flagged as unconfirmed or conflicting) and a research programme ...\". Contributions item 4: \"An AI-compiled, AI-cross-checked research library and an explicit research programme ...\". Make the same change in the .zenodo.json description.",
+            "evidence": "library/INDEX.md header: '648 verified, 17 unverified, 1 with mixed verification'. INDEX: 'verified ... does *not* mean the mathematics was checked'. INDEX 'Known access gaps'."
+          },
+          {
+            "location": "§8 Limitations: \"The library relies partly on secondary sources for events in September--November 2026.\"; §6: \"absent from Ba{\\l}aban's work\"",
+            "problem": "The Limitations section is missing a major access gap. No paper in Bałaban's series was read in full (the publisher site sat behind bot detection). The §6 summary of Bałaban, a central pillar of the programme, rests on Dimock's expositions, other secondary accounts and an 'unvetted' third-party transcription. The §6 bullet nonetheless states categorically what is 'absent from Bałaban's work'. Douglas's 2026 review, which the paper cites, was also not read.",
+            "severity": "major",
+            "fix": "Replace the Limitations bullet with: \"\\item The library relies on secondary sources in two important places. No paper of Ba{\\l}aban's series was read in full (the publisher's site blocked automated access). Section~\\ref{sec:landscape}'s account of his work therefore rests on Dimock's expositions, other secondary accounts and an unvetted third-party transcription. OpenAI's announcement pages returned HTTP~403 and were reconstructed from press and blog reports. Douglas's 2026 review~\\cite{Douglas2026f} was not read. Bibliography entries that could not be confirmed are flagged.\" In §6 change the bullet to: \"\\item According to these secondary accounts, correlation functions, convergence, infinite volume, the OS axioms and the gap are not treated in Ba{\\l}aban's work.\"",
+            "evidence": "library/INDEX.md 'Known access gaps' ('No Balaban CMP paper was read in full ... Paywalled reviews were not read, notably Douglas'). library/notes/05-balaban-program.md:9 ('I did not read the full text of any Balaban gauge-theory paper'), :17, :239. library/notes/05-balaban-program.md:309."
+          },
+          {
+            "location": "Title: \"Yang--Mills Existence and Mass Gap in Lean~4\"",
+            "problem": "The main title, read without the subtitle (search results, citation lists, Zenodo listings), looks like a result: a Lean proof of the Millennium problem. Zenodo already holds several claimed 'solutions' that the project's own notes rate as not credible, so the headline wording should rule out a solution reading on its own.",
+            "severity": "major",
+            "fix": "\\title{A Candidate Lean~4 Statement of the Yang--Mills Existence and Mass Gap Problem:\\\\[2pt]\\large Pre-registration, Adversarial AI Review, and a Research Programme (No Proof Is Claimed)} — use the same title in .zenodo.json and CITATION.cff.",
+            "evidence": "main.tex:36-37. .zenodo.json 'title'. library/notes/11-recent-frontier-2023-2026.md:270-285 (Zenodo deposits C8, C9, C10, C14, C15 claiming or discussing solutions)."
+          },
+          {
+            "location": "§9 'Authorship' (no competing-interests or funding statement anywhere)",
+            "problem": "There is no competing-interests or funding declaration, which COPE and ICMJE expect. A reader would want one here:\n- all the work was done with Anthropic's products;\n- the paper makes evaluative statements about a competitor's (OpenAI's) process and claims;\n- the library records that Anthropic posted a rival ETH result;\n- one of the cited Sussman–Alpöge authors is an Anthropic employee.",
+            "severity": "major",
+            "fix": "Add after 'Authorship' (the author must confirm the bracketed items): \"\\paragraph{Competing interests and funding.} The author declares [no employment by, funding from, or financial interest in OpenAI, Anthropic or any other AI developer] and received no funding for this work. Use of the AI systems was paid for [by the author through a commercial subscription]. Anthropic, whose models were used, had no role in the design, conduct or reporting of this work.\"",
+            "evidence": "main.tex:732-734 (no COI or funding paragraph). library/notes/01-problem-definition.md:52 ('Alpöge is an Anthropic employee'). library/notes/02-openai-ym-claim.md:169 (Anthropic ETH disproof)."
+          },
+          {
+            "location": "Package: library/notes/11 claimed-solutions table and legend; notes/05:239; notes/02:321. Paper §6: \"Each claim there carries a label: established theorem, claimed but unverified, heuristic, or disputed.\"",
+            "problem": "The deposited CC BY notes publish verdicts on named researchers' work that only AI agents made, with no human review. [Specific examples redacted before the v0.2.0 release: they named researchers and repeated labels and remarks that were removed from the notes in v0.2.0, including unreviewed AI verdicts on named authors' work, one verdict on a work that was not read, a remark about an author's background, and an unverified social-media attribution.] These are unsupported or unfair statements about named people in a permanent public record. The paper's §6 also misdescribes the label set, which omits these labels.",
+            "severity": "major",
+            "fix": "Paper §6: replace the sentence with \"Each claim there carries a label: established theorem, claimed but unverified, heuristic, disputed or open. The notes also label some claimed solutions as flawed or not credible. These are AI agents' assessments, not reviewed by any human expert, and should not be read as refereed judgements.\" Notes:\n- Rename the labels to [AI-ASSESSED: SUSPECTED ERROR] and [AI-ASSESSED: NOT ENGAGING KNOWN OBSTACLES].\n- Delete the assessment of any work that was not read (C8).\n- In notes/05:239, delete the remarks about the author's background and the inferred AI use [wording redacted before the v0.2.0 release].\n- Delete the unverified social-media bullet at notes/02:321 and reference 36.",
+            "evidence": "library/notes/11-recent-frontier-2023-2026.md:17 (legend), :270-285 (C1, C3, C5, C8 '[I: from the description]', C9, C10, C14, C15, C16). library/notes/05-balaban-program.md:239. library/notes/02-openai-ym-claim.md:321, :454 ('not verified directly'). main.tex:469-470."
+          },
+          {
+            "location": "§9 'Scale and structure' list",
+            "problem": "The disclosure omits facts that are readily available and that matter for calibration (they are AGMAI's 'time taken' item):\n- wall-clock times and tool calls for three of the four workflows;\n- that the orchestrating session, not any subagent, wrote the Lean statement (v0.1 and the v0.2 fixes), PROBLEM.md and PLAN.md, and that its usage is excluded;\n- that all subagents used one model;\n- that the entire project took place on 5–6 November 2026.",
+            "severity": "minor",
+            "fix": "Replace the list items with: \"\\item \\textbf{Research library.} 24 subagents (11 researchers, 11 adversarial citation and claim verifiers, an indexer and a completeness critic): about $9.1\\times10^6$ tokens, 2{,}560 tool calls, 2.0~hours. \\item \\textbf{Statement review.} 20 subagents (6 reviewers, 14 verifiers): about $3.6\\times10^6$ tokens, 272 tool calls, 24~minutes. \\item \\textbf{Plan critique.} 5 subagents: about $2.0\\times10^6$ tokens, 194 tool calls, 28~minutes. \\item \\textbf{Non-vacuity Lean proofs.} 3 subagents: about $0.6\\times10^6$ tokens, 70 tool calls, 12~minutes. \\item \\textbf{Orchestrating session.} Wrote the Lean statement (version~0.1 and the version~0.2 fixes), \\lean{PROBLEM.md}, the plan and this paper; its token use is not included above. \\item \\textbf{This paper.} Checked by a separate verification workflow (citations against arXiv and Crossref; claims against the Lean audit and the notes).\" Then add: \"All subagents used the same Claude model. The whole project, from the first literature search to this version of the paper, took place on 5 and 6 November 2026.\"",
+            "evidence": "wf_f5e14fa3-a3b.json (24 agents, 9,142,475 tokens, 2,560 tool calls, 119.4 min). wf_6798a78b-95c.json (20 agents, 3,639,596 tokens, 272 calls, 24.2 min). wf_575fbe60-a54.json (5 agents, 2,025,700 tokens, 194 calls, 28.4 min). wf_23aa9aef-573.json (3 agents, 574,347 tokens, 70 calls, 11.8 min). Every run's defaultModel is identical. The workspace directory was created 2026-11-05 20:43 CST. The statement-review script is READ-ONLY on YangMills/*.lean (ym-statement-review-wf_6798a78b-95c.js:18)."
+          },
+          {
+            "location": "§5.1: \"reviewed by six independent AI reviewer agents\"; \"an independent verifier\"",
+            "problem": "All reviewers and verifiers were context-isolated instances of one model, so their errors are correlated. 'Independent', and 'found independently by three reviewers' used as a mark of strength, overstate the diversity of the review. §9 admits the correlation only later.",
+            "severity": "minor",
+            "fix": "\"Version 0.1 of the statement was reviewed by six AI reviewer agents (separately prompted, context-isolated instances of the same model), each with a distinct lens:\" and \"Each finding then went to a separate verifier agent (same model) instructed to refute it, defaulting to `refuted' when in doubt.\" Make the same change to 'Twenty independent reviewer and verifier agents' in PROBLEM.md:141 and 'Five independent critiques' in README.md.",
+            "evidence": "main.tex:418, :429, :437. Run records: defaultModel identical across all four workflows (52 subagents)."
+          },
+          {
+            "location": "Abstract: \"AI systems carried out most of the work\"",
+            "problem": "The abstract is inconsistent with §9, which says AI performed 'essentially all' of the work and that the author 'did not hand-write the mathematics, the Lean code or the prose'. The abstract understates the AI share.",
+            "severity": "minor",
+            "fix": "\"AI systems wrote all of the mathematics, Lean code and prose, under the author's direction; no human expert has reviewed the work, and Section~\\ref{sec:ai} gives a full disclosure.\"",
+            "evidence": "main.tex:69-70 vs :696, :699, :729-730."
+          },
+          {
+            "location": "§9 'Verification and its limits': \"Every bibliography entry was checked by an AI verifier\"; refs.bib OpenAI2026p note",
+            "problem": "'Checked' means existence and metadata only; the content of OpenAI's blog posts was never accessed (HTTP 403). The single flag in refs.bib prints an internal artifact in the bibliography: 'UNVERIFIED in note(s) 01, 03, 04, 11; verified in others'. That flag contradicts the Limitations section, which says the page was not accessible. OpenAI2026g (also HTTP 403) carries no flag at all.",
+            "severity": "minor",
+            "fix": "Bullet: \"\\item Every bibliography entry was checked by an AI verifier for existence and bibliographic metadata against arXiv, Crossref or the cited URL. This does not mean that the cited content was read. Entries that could not be confirmed are flagged.\" refs.bib OpenAI2026p: note={Not accessed (openai.com returned HTTP 403 on 5 Nov 2026); content as reported by press and blogs}. OpenAI2026g: note={Content not accessed (HTTP 403); existence confirmed via links from OpenAI's repository}.",
+            "evidence": "PDF ref [20]: 'UNVERIFIED in note(s) 01, 03, 04, 11; verified in others.' library/notes/02-openai-ym-claim.md:8. library/notes/03-openai-navier-stokes-method.md:509. main.tex:665-667, :726-727."
+          },
+          {
+            "location": "§6 Stochastic quantization: \"A 2D non-Abelian Yang--Mills--Higgs measure was constructed in November 2026\"; §1: \"Aronow and Lopatto have posted an AI-generated continuum limit\"",
+            "problem": "Unrefereed work by named authors is presented as established. The Bringmann–Cao–Hairer–Zhao preprint was posted four days before this paper, on 2 Nov 2026. 'Posted an AI-generated continuum limit' reads as an achieved result. Aronow and Lopatto's own pages say 'Human understanding: no parts'. 'Sussman and Alpöge have published' also suggests formal publication.",
+            "severity": "minor",
+            "fix": "\"A construction of the 2D non-Abelian Yang--Mills--Higgs measure was posted on 2 November 2026 and is not yet refereed~\\cite{Bringmann2026b}.\" §1: \"Sussman and Alp\\\"oge have posted AI-generated manuscripts continuing ...\" and \"Aronow and Lopatto have posted AI-generated manuscripts claiming the continuum limit of three-dimensional $SU(2)$ Yang--Mills on a torus~\\cite{Aronow2026}.\"",
+            "evidence": "refs.bib Bringmann2026b howpublished '350 pp., 2 Nov 2026'. library/notes/11-recent-frontier-2023-2026.md:634 ('Human understanding: no parts'). main.tex:101-104, :517-518."
+          },
+          {
+            "location": "Table 1: \"Open by every account, including OpenAI's and the committee's\"; §1: \"The natural-language proof (reported as 1{,}147 pages)\"",
+            "problem": "Two statements about OpenAI go beyond the sources.\n- Sources disagree on whether OpenAI's post mentions the gap at all. What is supported is that OpenAI does not claim it, and the only citation given is the committee's.\n- The committee's '1147-page LLM proofs' (plural) does not say which results it covers; it may be YM only, or YM plus QCD plus the unified theory.",
+            "severity": "minor",
+            "fix": "Table: \"\\textbf{Open}; not claimed by OpenAI, and stated to be open by the committee~\\cite{Douglas2026e}.\" §1: \"The natural-language proofs (1{,}147 pages in total according to the committee, covering an unstated subset of the claimed results) and the Lean formalization are held by ...\"",
+            "evidence": "library/notes/02-openai-ym-claim.md:31 ('Sources disagree on whether OpenAI's post mentions the gap at all'), :187 ('Its scope is unstated'). Committee PDF text: 'together with the full 1147-page LLM proofs'."
+          },
+          {
+            "location": "§9 'Verification and its limits': \"Every machine-checked claim in Table~\\ref{tab:checked} is verified by Lean's kernel\"; §3.4 Proposition",
+            "problem": "The claim is accurate (I re-ran the audit) but incomplete. No independent replay (lean4checker or Comparator) has been run; PLAN lists that as a next action. The §3.4 Proposition, HasMassGap ⇔ operator gap, is shown only in sketch and is listed as an open obligation. Readers may count it among the checked results.",
+            "severity": "minor",
+            "fix": "\"\\item Every result in Table~\\ref{tab:checked} is checked by Lean's kernel when the project is built, and \\lean{Audit.lean} reproduces the axiom report. No independent replay (for example with \\lean{lean4checker} or Comparator) has yet been run. The Proposition in Section~3.4 is proved only in sketch and is not formalized.\"",
+            "evidence": "Audit output (all proved items: [propext, Classical.choice, Quot.sound]). PROBLEM.md:162 ('HasMassGap ⇔ operator gap after reconstruction | classical | moderate to large'). plan/PLAN.md:396 (Comparator still to do)."
+          },
+          {
+            "location": "§7.5: \"Until fourteen days after OpenAI's release, all work is clean-room by necessity.\"",
+            "problem": "Clean-room is a necessity only until OpenAI releases its material; for the following fourteen days it is a policy choice (PLAN SR0).",
+            "severity": "minor",
+            "fix": "\"Until OpenAI's release, all work is clean-room by necessity; by policy it stays clean-room for fourteen days after the release, after which the author chooses among three modes:\"",
+            "evidence": "main.tex:640. plan/PLAN.md:434 (SR0)."
+          },
+          {
+            "location": "§10 Data and code availability: \"Third-party PDFs are not redistributed.\"; dev/workflows/*.js",
+            "problem": "Two package risks.\n- The claim holds only if the deposit is built from Git. The working tree still holds 121 third-party arXiv PDFs in library/pdfs (about 100 MB; arXiv's default licence does not let third parties redistribute them), plus LaTeX build logs. .gitignore excludes them, but a zip of the folder uploaded straight to Zenodo would include them. Zenodo records cannot normally be altered after publication.\n- The workflow scripts embed absolute local paths containing the macOS username. This is a low-risk privacy and hygiene issue.\nINDEX.md also links to pdfs/ files that will not be in the deposit.",
+            "severity": "minor",
+            "fix": "Add to §10: \"The Zenodo archive is built from the tagged Git commit (\\lean{git archive}) and excludes the local PDF cache, which \\lean{scripts/fetch_pdfs.sh} rebuilds.\" In dev/workflows/*.js, replace '<repo-root>' with a repository-relative root (e.g. process.env.YM_ROOT || '.').",
+            "evidence": "ls library/pdfs gives 121 PDFs plus MANIFEST.tsv. .gitignore excludes 'library/pdfs/*.pdf' and paper/*.log. grep finds '<local-path>' in dev/workflows/ym-*-wf_*.js lines 6, 10 and 12."
+          },
+          {
+            "location": "Front matter / §10: \"The complete package is in the accompanying GitHub repository and its Zenodo archive\"",
+            "problem": "Metadata gaps.\n- The paper gives neither the repository URL nor the DOI.\n- The PDF has no Title or Author metadata.\n- CITATION.cff says 'type: software' while .zenodo.json says preprint (.zenodo.json takes precedence under the GitHub–Zenodo integration).",
+            "severity": "minor",
+            "fix": "Add \\hypersetup{pdftitle={A Candidate Lean 4 Statement of the Yang--Mills Existence and Mass Gap Problem},pdfauthor={Peter Lowes}} after loading hyperref. In §10: \"The complete package is at \\url{https://github.com/betterfuture2030/yang-mills-lean} and archived on Zenodo (\\href{https://doi.org/10.5281/zenodo.NNNNNNN}{doi:10.5281/zenodo.NNNNNNN}).\" Reserve the DOI in the Zenodo draft before building the final PDF.",
+            "evidence": "pdfinfo main.pdf shows no Title or Author fields. .zenodo.json related_identifiers has the GitHub URL. CITATION.cff 'type: software'."
+          }
+        ]
+      }
+    }
+  ],
+  "workflowProgress": [
+    {
+      "type": "workflow_phase",
+      "index": 1,
+      "title": "Verify"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 1,
+      "label": "cite-1",
+      "phaseIndex": 1,
+      "phaseTitle": "Verify",
+      "agentId": "adf600ea841f05d10",
+      "model": "<model>",
+      "state": "done",
+      "startedAt": 1793992803346,
+      "queuedAt": 1793992803296,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "I checked all 28 keys against live sources on 2026-11-06. *…",
+      "promptPreview": "You are verifying a paper before public deposit on Zenodo: <repo-root>/paper/main.tex (bibliography <repo-root>/paper/refs.bib, built PDF <repo-root>/paper/main.pdf). Supporting material: <repo-root>/library/notes/*.md (verified research notes), <local-path>",
+      "promptFramed": true,
+      "lastProgressAt": 1793993320530,
+      "tokens": 284247,
+      "toolCalls": 43,
+      "durationMs": 517182,
+      "resultPreview": "{\"checked\":\"I checked all 28 keys against live sources on 2026-11-06.\\n\\n**Metadata confirmed:**\\n- **arXiv API:** 2609.20803 (Constantin, Ignatova, Vicol; v2 29 Sep 2026, math.AP) and 2610.08144 (Bastounis, Circelli, Hansen; 6 Oct 2026). Titles and authors match.\\n- **Crossref:** BF01645738 and BF01608978 (Osterwalder–Schrader, CMP 31:83–112 and 42:281–305); BF01215753, BF01215223, BF01239022, BF…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 2,
+      "label": "cite-2",
+      "phaseIndex": 1,
+      "phaseTitle": "Verify",
+      "agentId": "a522415ca82ee3ec8",
+      "model": "<model>",
+      "state": "done",
+      "startedAt": 1793992803347,
+      "queuedAt": 1793992803296,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "Scope: all 28 assigned keys. I checked each one in three wa…",
+      "promptPreview": "You are verifying a paper before public deposit on Zenodo: <repo-root>/paper/main.tex (bibliography <repo-root>/paper/refs.bib, built PDF <repo-root>/paper/main.pdf). Supporting material: <repo-root>/library/notes/*.md (verified research notes), <local-path>",
+      "promptFramed": true,
+      "lastProgressAt": 1793993370239,
+      "tokens": 272773,
+      "toolCalls": 53,
+      "durationMs": 564699,
+      "resultPreview": "{\"checked\":\"Scope: all 28 assigned keys. I checked each one in three ways: (a) its bib metadata against Crossref, the arXiv API or the GitHub API; (b) every sentence in main.tex that cites it; (c) the library notes, plus the primary source where one was reachable.\\n\\nMETADATA CONFIRMED CORRECT (Crossref JSON: title, authors, venue, volume, pages, year):\\n- Glimm1987: 2nd ed., Springer NY 1987, ISB…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 3,
+      "label": "cite-3",
+      "phaseIndex": 1,
+      "phaseTitle": "Verify",
+      "agentId": "a99773fa91ebbe1fc",
+      "model": "<model>",
+      "state": "done",
+      "startedAt": 1793992803347,
+      "queuedAt": 1793992803296,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "I checked all 28 keys against their sources. arXiv API (exp…",
+      "promptPreview": "You are verifying a paper before public deposit on Zenodo: <repo-root>/paper/main.tex (bibliography <repo-root>/paper/refs.bib, built PDF <repo-root>/paper/main.pdf). Supporting material: <repo-root>/library/notes/*.md (verified research notes), <local-path>",
+      "promptFramed": true,
+      "lastProgressAt": 1793993175389,
+      "tokens": 208309,
+      "toolCalls": 36,
+      "durationMs": 369846,
+      "resultPreview": "{\"checked\":\"I checked all 28 keys against their sources. arXiv API (export.arxiv.org): 1907.05474, 1403.7244, 1912.07973, 1108.1335, 1212.5562, 1304.0705, 2204.07201, 1502.07719, 1608.04379, 1610.03821, 2001.05627, 1811.09770, 2001.07453, 2509.04688, 2505.16585, 2307.06790. In every case the title, authors and date match the bib. Crossref (api.crossref.org/works/<DOI>): all 23 DOIs resolve, and au…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 4,
+      "label": "cite-4",
+      "phaseIndex": 1,
+      "phaseTitle": "Verify",
+      "agentId": "a1fb952bd916352b3",
+      "model": "<model>",
+      "state": "done",
+      "startedAt": 1793992803347,
+      "queuedAt": 1793992803296,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "I checked all 27 assigned keys. I did not modify any file. …",
+      "promptPreview": "You are verifying a paper before public deposit on Zenodo: <repo-root>/paper/main.tex (bibliography <repo-root>/paper/refs.bib, built PDF <repo-root>/paper/main.pdf). Supporting material: <repo-root>/library/notes/*.md (verified research notes), <local-path>",
+      "promptFramed": true,
+      "lastProgressAt": 1793993293556,
+      "tokens": 235322,
+      "toolCalls": 52,
+      "durationMs": 488014,
+      "resultPreview": "{\"checked\":\"I checked all 27 assigned keys. I did not modify any file.\\n\\nMETADATA. All 15 arXiv IDs were queried through the arXiv API: 2006.16229, 2201.03487, 2503.03060, 2111.10652, 2611.03640, 1303.5113, 1006.4518, 1101.0963, 1703.00501, 2201.06166, 2506.03247, hep-lat/9901004, 1210.4997, 2610.09093 and 2405.06423. Every ID exists, and title, authors and date match the bib.\\n\\nAll 15 DOIs were…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 5,
+      "label": "claims",
+      "phaseIndex": 1,
+      "phaseTitle": "Verify",
+      "agentId": "a4c00303f8e8f092a",
+      "model": "<model>",
+      "state": "done",
+      "startedAt": 1793992803347,
+      "queuedAt": 1793992803296,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "I ran the axiom audit (`lake env lean YangMills/Audit.lean`…",
+      "promptPreview": "You are verifying a paper before public deposit on Zenodo: <repo-root>/paper/main.tex (bibliography <repo-root>/paper/refs.bib, built PDF <repo-root>/paper/main.pdf). Supporting material: <repo-root>/library/notes/*.md (verified research notes), <local-path>",
+      "promptFramed": true,
+      "lastProgressAt": 1793994116029,
+      "tokens": 434873,
+      "toolCalls": 83,
+      "durationMs": 1310486,
+      "resultPreview": "{\"checked\":\"I ran the axiom audit (`lake env lean YangMills/Audit.lean`) and read every .lean file, lean-toolchain, lake-manifest.json, the workflow run records (<session-dir>/workflows/wf_*.json), the scripts, notes 01–11, PROBLEM.md, PLAN.md and the critiques. I also read the committee's primary text as fetched in the research transcripts, and compiled the rev…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 6,
+      "label": "math",
+      "phaseIndex": 1,
+      "phaseTitle": "Verify",
+      "agentId": "a97f52845228c328e",
+      "model": "<model>",
+      "state": "done",
+      "startedAt": 1793992803347,
+      "queuedAt": 1793992803297,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "Read-only review of <local-path>",
+      "promptPreview": "You are verifying a paper before public deposit on Zenodo: <repo-root>/paper/main.tex (bibliography <repo-root>/paper/refs.bib, built PDF <repo-root>/paper/main.pdf). Supporting material: <repo-root>/library/notes/*.md (verified research notes), <local-path>",
+      "promptFramed": true,
+      "lastProgressAt": 1793993729497,
+      "tokens": 286271,
+      "toolCalls": 16,
+      "durationMs": 923955,
+      "resultPreview": "{\"checked\":\"Read-only review of <repo-root>/paper/main.tex (I checked the flagged phrases against the built main.pdf), set against OS.lean, Lattice.lean, Statement.lean and OpenProblems.lean, library note 01 (sections 2.4-2.9), notes 05, 08 and 09, PROBLEM.md, PLAN.md and critique-mass-gap.md. I also ran the Lean axiom audit: every proved theorem depends only on pro…"
+    },
+    {
+      "type": "workflow_agent",
+      "index": 7,
+      "label": "disclosure",
+      "phaseIndex": 1,
+      "phaseTitle": "Verify",
+      "agentId": "a6bbee8a333a9f421",
+      "model": "<model>",
+      "state": "done",
+      "startedAt": 1793992803347,
+      "queuedAt": 1793992803297,
+      "attempt": 1,
+      "lastToolName": "StructuredOutput",
+      "lastToolSummary": "Scope: disclosure, ethics, privacy and publication norms fo…",
+      "promptPreview": "You are verifying a paper before public deposit on Zenodo: <repo-root>/paper/main.tex (bibliography <repo-root>/paper/refs.bib, built PDF <repo-root>/paper/main.pdf). Supporting material: <repo-root>/library/notes/*.md (verified research notes), <local-path>",
+      "promptFramed": true,
+      "lastProgressAt": 1793993628853,
+      "tokens": 270115,
+      "toolCalls": 53,
+      "durationMs": 823311,
+      "resultPreview": "{\"checked\":\"Scope: disclosure, ethics, privacy and publication norms for paper/main.tex (md5 9a278c21…, unchanged since 08:45), paper/refs.bib, the built PDF, and the deposit package. I did not modify any file.\\n\\nFive areas check out:\\n\\n1. **No model version string in the paper.** I searched main.tex and the PDF text (pdftotext) for model-ID patterns. Only product and company names appear (\\\"Ant…"
+    }
+  ],
+  "totalTokens": 1991910,
+  "totalToolCalls": 336
+}

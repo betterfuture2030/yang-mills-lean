@@ -1,0 +1,40 @@
+cff-version: 1.2.0
+message: "If you use this work, please cite it as below."
+title: "A Candidate Lean 4 Statement of the Yang–Mills Existence and Mass Gap Problem: Adversarial AI Review and a Research Programme (No Proof Is Claimed)"
+type: software
+preferred-citation:
+  type: report
+  title: "A Candidate Lean 4 Statement of the Yang–Mills Existence and Mass Gap Problem: Adversarial AI Review and a Research Programme (No Proof Is Claimed)"
+  authors:
+    - family-names: Lowes
+      given-names: Peter
+  year: 2026
+  notes: "Version 0.2.0. Not a proof. AI-generated content; see the AI-use disclosure."
+version: 0.2.0
+date-released: 2026-11-11
+authors:
+  - family-names: Lowes
+    given-names: Peter
+repository-code: "https://github.com/betterfuture2030/yang-mills-lean"
+license:
+  - Apache-2.0
+  - CC-BY-4.0
+keywords:
+  - Yang–Mills theory
+  - mass gap
+  - Millennium Prize Problems
+  - Lean 4
+  - Mathlib
+  - formal verification
+  - constructive quantum field theory
+  - Osterwalder–Schrader axioms
+  - AI-assisted mathematics
+abstract: >-
+  A candidate formal statement, in Lean 4 with Mathlib, of the Clay Millennium problem
+  "Yang–Mills existence and mass gap" and an existence-only variant; machine-checked sanity and
+  non-vacuity results; an adversarial-review methodology and its findings; a research library
+  compiled and cross-checked by AI agents; and a research programme for an independent proof. This work does NOT prove existence
+  or a mass gap. Its main design elements also appear in the earlier candidate statement of
+  K. Rémondière (Zenodo, 10.5281/zenodo.23650415). AI systems (Anthropic's Claude via Claude Code) carried out most of the work; see
+  the AI-use disclosure in the paper (paper/main.pdf, Section 9). Licensing is by file type
+  (Lean code and scripts: Apache-2.0; all other content: CC BY 4.0; see LICENSE).

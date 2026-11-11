@@ -1,0 +1,12 @@
+This repository is dual-licensed by file type:
+
+* Lean source code (lean/YangMills/**/*.lean, lakefile.toml) and scripts (scripts/, dev/,
+  paper/make_refs.py): Apache License 2.0 — see LICENSE-APACHE-2.0.
+* All other content (paper, notes, plan, critiques, problem description, bibliography
+  metadata, README files): Creative Commons Attribution 4.0 International (CC BY 4.0) —
+  see LICENSE-CC-BY-4.0.txt.
+
+Copyright 2026 Peter Lowes.
+
+Third-party works cited in library/ are NOT redistributed; library/pdfs/MANIFEST.tsv lists
+their arXiv identifiers and scripts/fetch_pdfs.sh re-downloads them from arXiv.

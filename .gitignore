@@ -1,0 +1,16 @@
+# Lean build artefacts and the Mathlib cache (~7 GB): restore with `lake exe cache get`
+lean/YangMills/.lake/
+# Third-party PDFs are NOT redistributed; see library/pdfs/MANIFEST.tsv and scripts/fetch_pdfs.sh
+library/pdfs/*.pdf
+# LaTeX build artefacts (main.pdf is kept)
+paper/*.aux
+paper/*.log
+paper/*.out
+paper/*.toc
+paper/*.fls
+paper/*.fdb_latexmk
+paper/*.xdv
+paper/*.blg
+paper/*.bbl
+paper/build.log
+.DS_Store

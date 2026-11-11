@@ -1,0 +1,931 @@
+\documentclass[11pt]{article}
+
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\setmainfont{lmroman10-regular.otf}[BoldFont=lmroman10-bold.otf,ItalicFont=lmroman10-italic.otf,BoldItalicFont=lmroman10-bolditalic.otf]
+\setmathfont{latinmodern-math.otf}
+\setmonofont{Menlo}[Scale=0.82]
+\usepackage{microtype}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{booktabs}
+\usepackage{tabularx}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{fancyvrb}
+\usepackage{xcolor}
+\usepackage[numbers,sort&compress]{natbib}
+\usepackage{xurl}
+\usepackage[colorlinks=true,linkcolor=blue!50!black,citecolor=green!35!black,urlcolor=blue!60!black]{hyperref}
+\usepackage{caption}
+\hypersetup{pdftitle={A Candidate Lean 4 Statement of the Yang-Mills Existence and Mass Gap Problem},pdfauthor={Peter Lowes}}
+
+\newtheorem{proposition}{Proposition}[section]
+\theoremstyle{definition}
+\newtheorem{definition}[proposition]{Definition}
+\theoremstyle{remark}
+\newtheorem{remark}[proposition]{Remark}
+
+\fvset{fontsize=\small,frame=single,framesep=2mm}
+\newcommand{\R}{\mathbb{R}}
+\newcommand{\C}{\mathbb{C}}
+\newcommand{\Sch}{\mathcal{S}}
+\newcommand{\tr}{\operatorname{tr}}
+\newcommand{\lean}[1]{\texttt{\hyphenchar\font=-1\relax #1}}
+\setlength{\emergencystretch}{4em}
+\newcommand{\dotbr}{.\allowbreak}
+
+\title{A Candidate Lean~4 Statement of the Yang--Mills\\ Existence and Mass Gap Problem\\[4pt]
+\large Adversarial AI Review and a Research Programme\\ (No Proof Is Claimed)}
+\author{Peter Lowes}
+\date{6 November 2026; revised 10--11 November 2026 \quad (version 0.2.0)\\[2pt]\small Statement files unchanged since 6 November; pre-registration claim withdrawn after\\ the release of OpenAI's Lean code on 10 November.}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+On 26 October 2026 OpenAI announced an AI-generated proof of the existence of four-dimensional
+quantum Yang--Mills theory, formalized in Lean, and placed it with a shepherding committee whose
+first stated objective is to check that ``the definitions and problem statement correspond with
+those which are standard in physics and mathematics''. On 10 November 2026 the committee published OpenAI's Lean code, with an assessment that
+its announcement describes as a validation that the code proves the existence of pure Yang--Mills
+theory~\cite{Douglas2026g}. That release came after the statement, its review and the research
+library reported here were completed on 6 November; this version examines neither the code nor the
+assessment. This paper does \emph{not} prove existence or the
+mass gap. It contributes four things that are independent of OpenAI's material.
+(i)~A candidate formal statement, in Lean~4 with Mathlib, of the Clay Millennium problem
+``Yang--Mills existence and mass gap'' and of an existence-only variant. The statement uses the
+Osterwalder--Schrader axioms with OS~II's linear growth condition, a Euclidean formulation of
+the mass gap, and identifies the theory as Yang--Mills through a continuum-limit clause for
+Wilson's lattice gauge theory, a full-field-content clause for the 21 components of
+$\tr F_{\mu\nu}F_{\kappa\lambda}$, and a short-distance asymptotic-freedom fingerprint.
+(ii)~Machine-checked sanity and non-vacuity results: the trivial theory satisfies the axioms but
+not the non-triviality clause; the lattice partition function is positive; and $SU(N)$,
+$N\ge2$, satisfies the hypotheses of the general statement ($SU(N)$ is connected and its Lie
+algebra, computed in Lean to be $\mathfrak{su}(N)$, is simple). All of these depend only on
+Lean's three standard axioms.
+(iii)~An adversarial-review methodology, executed with AI agents, that found a critical defect in
+the first draft (the cluster axiom admitted the zero vector, which collapses the Hilbert space
+and would have made the open theorems provably false) and four major fidelity defects, two
+fixed and two only partly (short-distance agreement is imposed only through a scalar two-point
+fingerprint, and the dependence on Wilson's lattice regularization remains); both residues are
+recorded as deviations from the Clay text.
+(iv)~A research library compiled and cross-checked by AI agents (11 notes; 666 bibliography
+entries whose existence and metadata were checked, a few flagged as unconfirmed) and a research programme
+for an independent proof, informed by the published record of OpenAI's agent-swarm attack on
+Navier--Stokes and its public Lean repositories, with explicit subjective odds, stop rules and
+an independence policy. The statement's main design elements also appear in an earlier candidate
+statement by R\'emondi\`ere~\cite{Remondiere2026}. AI systems wrote all of the mathematics, Lean
+code and prose under the author's direction; no human expert has reviewed the work;
+Section~\ref{sec:ai} gives a full disclosure.
+\end{abstract}
+
+\tableofcontents
+
+%=====================================================================
+\section{Introduction}
+%=====================================================================
+
+The Clay Mathematics Institute's Millennium problem on Yang--Mills theory, described by Jaffe
+and Witten~\cite{Jaffe2000}, asks for a proof that for every compact simple gauge group $G$ a
+non-trivial quantum Yang--Mills theory exists on $\R^4$ and has a mass gap $\Delta>0$, where
+existence includes ``axiomatic properties at least as strong as'' those of
+Streater--Wightman~\cite{Streater1964} and Osterwalder--Schrader~\cite{Osterwalder1973,Osterwalder1975}.
+Douglas's 2004 status report~\cite{Douglas2004} recorded the state of the art as
+Ba{\l}aban's renormalization-group programme for lattice gauge theory~\cite{Balaban1984a,Balaban1987,Balaban1988d,Balaban1989b,Balaban1989c}
+and the infrared-cutoff construction of Magnen, Rivasseau and S\'en\'eor~\cite{Magnen1993}; a
+2026 review is~\cite{Douglas2026f}.
+
+\paragraph{The 2026 situation.}
+On 8 September 2026 OpenAI announced a Lean-formalized proof of finite-time blowup for the
+three-dimensional Navier--Stokes equations with smooth forcing, produced by a large multi-agent
+system~\cite{OpenAI2026g,OpenAI2026c,OpenAI2026k,Howlett2026h}; the scope of that result relative to
+Fefferman's problem statement~\cite{Fefferman2000} is disputed because it uses the forced
+alternative~\cite{Howlett2026b}; Constantin, Ignatova and Vicol show that constructions with its key
+features cannot have a real-analytic force~\cite{Constantin2026c}.
+On 26 October 2026 OpenAI announced, among other results, an existence proof for pure
+Yang--Mills theory in four dimensions, as part of a claimed construction of certain interacting
+gauge theories with fermions; the mass gap is not claimed and no gauge group is named
+publicly~\cite{OpenAI2026p,Woit2026d,QRC2026,Howlett2026e}. The natural-language proofs (``the full
+1147-page LLM proofs'' according to the committee, covering an unstated subset of the claimed results)
+and the Lean formalization of pure Yang--Mills existence are held by a shepherding committee (Douglas, Gross (chair), Jaffe, Klebanov, Nekrasov), which states that
+Ba{\l}aban's ideas were ``among the important elements'' and that confinement and the mass gap
+remain open~\cite{Douglas2026e,Douglas2026d,KITP2026b}. As of 6 November 2026, when the statement, its review and
+the research library reported here were completed, none of this material was public. On 10 November
+2026 the committee published the Lean code that OpenAI submitted to it on 28 October, together with
+an assessment~\cite{Douglas2026g}. The committee's announcement calls the assessment a ``Validation of
+the OpenAI Yang--Mills construction (Lean proof)'' and describes it as summarizing the committee's
+checks that the code proves the existence of pure Yang--Mills theory according to the problem
+statements standard in physics and mathematics; that is the committee's conclusion, not one examined
+here. The announcement covers only the Lean code and the assessment. GitHub lists the repository
+holding OpenAI's code as created on 5 November 2026; the committee announced that it would make it
+public on 10 November. Neither the code nor the assessment is examined in this version. Independently, Sussman and Alp\"oge have posted AI-generated, self-described tentative
+manuscripts continuing Ba{\l}aban's programme in three dimensions, with an unfinished
+four-dimensional part~\cite{Sussman2026}, and Aronow and Lopatto have posted AI-generated
+manuscripts claiming the continuum limit of three-dimensional $SU(2)$ Yang--Mills theory on a
+torus~\cite{Aronow2026}. None of these claims has
+been refereed.
+
+\paragraph{Why a formal statement matters now.}
+A Lean proof certifies only the theorem that was stated, not the paper's argument: the
+Navier--Stokes Lean development reaches its headline theorem through intermediate lemmas that differ
+from the paper's~\cite{Bastounis2026}. Errors of meaning therefore concentrate in the statement. The
+maintainers of the lean-dojo collection mark its Yang--Mills statement as incomplete and ``not a valid
+target'', noting that a two-dimensional toy model satisfies it~\cite{Leandojo2026}. An earlier
+AI-written candidate statement by R\'emondi\`ere, deposited on Zenodo on 25 October
+2026~\cite{Remondiere2026}, already combines a Wilson-lattice-limit variant with an axiomatic variant
+carrying a Yang--Mills ``fingerprint'', uses the 21 components of $\tr F_{\mu\nu}F_{\rho\sigma}$ as
+field content, and concedes that its gap covers only the C-even sector they generate; like the present
+work, it was written by Claude agents under its author's direction. Our statement shares these main
+design elements. The library note that reviewed it (note~01) was written before our version~0.1 was
+reviewed, and our version~0.2 additions were made by reviewer agents who had read that note. As of
+6 November 2026 the formal-conjectures collection~\cite{DeepMind2026} contains no merged Yang--Mills
+statement (an open pull request proposes one). The shepherding committee lists statement fidelity as
+its first objective~\cite{Douglas2026e}, and its 9 November announcement reports a positive result of
+checks of that kind~\cite{Douglas2026g}. An AI-reviewed candidate statement written independently of
+OpenAI's code, with published file hashes, is useful as a point of comparison whatever the status of
+that proof. It is \emph{not} a pre-registration. The statement files of version~0.2.0 were completed
+on 6 November 2026, four days before the committee published OpenAI's Lean code, but that date rests
+on the author's account and on local Git commits that carry no independent timestamp. Those commits
+were squashed into a single commit before first publication, to remove local file paths, so they are
+not public: the published history begins on 10 November 2026, and this deposit was made after the
+release. The author states that the statement files were not changed after the release and that
+OpenAI's Lean code was not consulted in writing them; neither claim can be checked independently. What the deposit does fix is the content: the
+SHA-256 hashes of the statement files are listed in Section~\ref{sec:data}, and any later version will
+be published with a diff against 0.2.0 and the reason for each change.
+
+\paragraph{Premise and scope.}
+This work was undertaken under a working premise set by the author: \emph{assume that OpenAI's
+existence proof and its Lean formalization are correct, and aim to produce an independent proof
+and formalization}. The premise is not evaluated here. Section~\ref{sec:programme} explains what
+it does and does not imply for our formal targets.
+
+\paragraph{Contributions.}
+\begin{enumerate}[leftmargin=*]
+\item A candidate Lean~4/Mathlib statement (Section~\ref{sec:statement}) of
+  \lean{ClayYangMills}, its existence half \lean{ClayExistence}, an $SU(N)$ existence statement
+  along the asymptotic-freedom trajectory (\lean{SUNExists}), and an ordered ladder of weaker
+  milestone statements (implied by \lean{SUNExists}, with the implications proved in Lean). Its main
+  design elements also appear in the earlier candidate of~\cite{Remondiere2026}.
+\item Fully machine-checked sanity and non-vacuity results (Section~\ref{sec:checked}).
+\item An adversarial statement-review methodology and its findings (Section~\ref{sec:review}).
+\item An AI-compiled, AI-cross-checked research library and an explicit research programme with odds, stop rules and
+  an AI operating model informed by the published record of 2026's large-scale AI attacks on
+  Millennium problems (Sections~\ref{sec:landscape} and~\ref{sec:programme}).
+\end{enumerate}
+\emph{This paper contains no proof of existence or of a mass gap, and does not claim one.}
+
+%=====================================================================
+\section{The problem}\label{sec:problem}
+%=====================================================================
+
+\subsection{What Jaffe and Witten ask for}
+The official description~\cite{Jaffe2000} asks for a quantum field theory ``in the above sense''
+(Wightman/OS axioms~\cite{Streater1964,Osterwalder1973,Osterwalder1975}; see
+also~\cite{Glimm1987,Haag1996}) satisfying, in addition:
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Field content.} Local quantum fields correspond to gauge-invariant local polynomials
+  in the curvature $F$ and its covariant derivatives, e.g.\ $\tr F_{ij}F_{kl}(x)$; the
+  correspondence is not canonical (a footnote notes renormalization subtleties).
+\item \textbf{Short distances.} Correlation functions agree at short distances with asymptotic
+  freedom~\cite{Gross1973,Politzer1973} and textbook renormalized perturbation theory, including
+  a stress tensor and an operator product expansion.
+\item \textbf{Mass gap.} $H\Omega=0$, the spectrum of $H$ lies in $[0,\infty)$, and $H$ has no
+  spectrum in $(0,\Delta)$; the supremum $m$ of such $\Delta$ must be finite.
+\item \textbf{No weak existence.} Existence by compactness alone is not a solution unless the
+  axioms and the gap are established for the limit.
+\item \textbf{A Hilbert space.} ``Establishing a quantum mechanical Hilbert space is part of the
+  solution.''
+\end{enumerate}
+
+\subsection{Osterwalder--Schrader axioms and linear growth}
+Osterwalder and Schrader~\cite{Osterwalder1973} gave Euclidean axioms (E0)--(E4) for Schwinger
+distributions $S_n$ on $\Sch_0(\R^{4n})$ (Schwartz functions vanishing with all derivatives on
+all diagonals): temperedness, Euclidean covariance, reflection positivity, symmetry, and cluster
+property. A lemma in~\cite{Osterwalder1973} is incorrect, and OS~II~\cite{Osterwalder1975}
+replaced temperedness by the \emph{linear growth condition}
+\begin{equation}\label{eq:E0prime}
+\tag{E0$'$}
+|S_n(f)|\le \sigma_n\,|f|_{ns},\qquad \sigma_n\le\alpha\,(n!)^\beta,
+\end{equation}
+for a fixed Schwartz norm index $s$, under which reconstruction of a Wightman theory holds. The
+Glimm--Jaffe measure axioms~\cite{Glimm1987} are not suitable here. A short argument of ours (library
+note~01, \S2.6; not a published result) shows that their regularity axiom OS1 is incompatible with any
+field of scaling dimension greater than two, and so with the expected $|x|^{-8}\log^{-2}(1/|x|)$
+behaviour of $\tr F^2$.
+
+\subsection{Status}
+Table~\ref{tab:status} summarises the status on 6 November 2026; details and sources are in the
+library notes (Section~\ref{sec:data}).
+
+\begin{table}[ht]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}lX@{}}
+\toprule
+Item & Status \\
+\midrule
+4D existence (gauge groups not stated) & \textbf{Claimed} by OpenAI for pure Yang--Mills theory; gauge groups, axioms and Lean statement not public on 6 November; Lean code released by the committee on 10 November, after this work, with an assessment that the committee's announcement describes as validating it; neither is examined here~\cite{OpenAI2026p,Douglas2026e,Douglas2026d,Douglas2026g}. \\
+4D mass gap & \textbf{Open}: not claimed by OpenAI~\cite{OpenAI2026p,Woit2026d}; the committee states that it remains open~\cite{Douglas2026e}. \\
+3D Yang--Mills continuum & No refereed construction; AI-generated claims~\cite{Sussman2026,Aronow2026}. \\
+2D Yang--Mills & Constructed~\cite{Driver1989,Gross1989,Sengupta1997,Levy2003,Chevyrev2019}; Langevin dynamics and universality~\cite{Chandra2022,Chevyrev2026b}. \\
+4D lattice mass gap, continuous non-Abelian $G$ & Proved only at strong coupling~\cite{Osterwalder1978,Seiler1982,Shen2023}; never in the weak-coupling continuum regime. (Finite $G$: correlation decay at weak coupling~\cite{Adhikari2025}; 3D $U(1)$, Villain action: area law at all couplings~\cite{Gopfert1982}.) \\
+\bottomrule
+\end{tabularx}
+\caption{Status of the problem and its relatives (6 November 2026, with the 10 November release noted).}
+\label{tab:status}
+\end{table}
+
+%=====================================================================
+\section{A candidate formal statement in Lean 4}\label{sec:statement}
+%=====================================================================
+
+The statement is a Lean~4~\cite{Moura2021} project built on Mathlib~\cite{Mathlib2020}
+(toolchain and Mathlib tag \lean{v4.36.0-rc2}, Mathlib commit \lean{9d581df}). It imports only
+Mathlib, contains definitions and proofs only, and confines every \lean{sorry} to one file of
+open problems. About 1{,}700 lines are spread over \lean{OS.lean} (axioms),
+\lean{Lattice.lean} (lattice gauge theory), \lean{SU.lean} ($SU(N)$),
+\lean{Statement.lean} (targets), \lean{OpenProblems.lean}, \lean{Sanity.lean},
+\lean{NonVacuity/*.lean} and \lean{Audit.lean}.
+
+\subsection{Design choices}
+\begin{enumerate}[leftmargin=*]
+\item \textbf{Euclidean OS form.} OS form is closest to every constructive route; OS~II yields a
+  Wightman theory.
+\item \textbf{Multilinear Schwinger functions.} For fields $\varphi_i$, $i\in\iota$, transforming
+  under a real representation $\rho$ of $O(4)$, the $n$-point function is a continuous
+  multilinear form
+  $S_n(f_1,\dots,f_n)=\langle\varphi(f_1)\cdots\varphi(f_n)\rangle$ on
+  $f_k\in\Sch(\R^4,\C^\iota)$. This avoids building tensor products of Schwartz functions.
+\item \textbf{Disjoint supports.} Composite-operator correlations have scheme-dependent contact
+  terms. Following OS's use of $\Sch_0$, every axiom except growth is imposed only on tuples
+  with pairwise disjoint supports; reflection positivity is imposed on products supported in
+  ordered positive-time slabs, the multilinear analogue of OS's $\Sch_+$.
+\item \textbf{Constructed operations, not relations.} Euclidean motions, translations and the
+  reflection-conjugation $\Theta$ are built as continuous linear maps from Mathlib's
+  \lean{SchwartzMap\dotbr compCLMOfContinuousLinearEquiv}, \lean{compSubConstCLM} and
+  \lean{postcompCLM}. A purely relational definition would risk vacuity if no related function
+  existed.
+\end{enumerate}
+
+\subsection{Axioms}
+Write $\Theta f=\overline{\rho(\theta)^{\mathsf T}f(\theta\,\cdot)}$ with $\theta$ time reflection, and for
+finite linear combinations $F=\sum_j c_j\,\varphi(f_{j,1})\cdots\varphi(f_{j,n_j})$ and
+$G=\sum_l d_l\,\varphi(g_{l,1})\cdots\varphi(g_{l,m_l})$ of ordered-positive monomials define the
+reflection-positivity form
+\[
+B(F,G)=\sum_{j,l}\overline{c_j}\,d_l\;S_{n_j+m_l}\big(\Theta f_{j,n_j},\dots,\Theta f_{j,1},
+g_{l,1},\dots,g_{l,m_l}\big).
+\]
+\lean{OSAxioms} consists of:
+\begin{itemize}[leftmargin=*]
+\item normalization ($S_0=1$);
+\item an equivalent form of \eqref{eq:E0prime}: for each $n$, $S_n$ agrees on disjointly supported
+  products with a distribution $T_n$ on $\Sch((\R^4)^n)$ obeying
+  $|T_n(F)|\le\alpha(n!)^\beta|F|_{ns}$ (equivalent to OS~II's condition on $\Sch_0$ by
+  Hahn--Banach and density of disjointly supported products, with norm-convention constants
+  absorbed into $(n!)^\beta$; this equivalence is argued, not formalized);
+\item reality;
+\item Euclidean covariance under $f\mapsto\rho(R^{-1})^{\mathsf T}f(R^{-1}(\cdot-a))$ for all
+  $R\in O(4)$, $a\in\R^4$;
+\item permutation symmetry;
+\item reflection positivity $B(F,F)\ge0$;
+\item the cluster property
+  $S(\Theta A^*\cdot T_{\lambda a}B)\to S(\Theta A^*)S(B)$ as $\lambda\to\infty$, for every
+  \emph{non-zero} spatial $a$.
+\end{itemize}
+
+\subsection{The mass gap}
+With the truncated form $B_T(F,G)=B(F,G)-B(F,1)B(1,G)$ and Euclidean time translation $T_t$:
+
+\begin{definition}[\lean{HasMassGap}]
+$\Delta>0$ and, for all ordered-positive $F,G$ and all $t\ge0$,
+$|B_T(F,T_tG)|\le e^{-\Delta t}\,B_T(F,F)^{1/2}B_T(G,G)^{1/2}$.
+\end{definition}
+
+\begin{proposition}
+After OS reconstruction, \lean{HasMassGap}~$\Delta$ is equivalent to
+$\|e^{-tH}(1-P_\Omega)\|\le e^{-\Delta t}$ for $t\ge0$, i.e.\ the spectrum of the Hamiltonian
+on $\Omega^\perp$ lies in $[\Delta,\infty)$ and the vacuum is unique.
+\end{proposition}
+\begin{proof}[Sketch]
+Reconstruction maps ordered-positive $F$ to vectors $\hat F$ in the OS Hilbert space $\mathcal H$
+generated by the fields, with $\langle\hat F,\hat G\rangle=B(F,G)$ and $\widehat{T_tG}=e^{-tH}\hat G$,
+$H=H^*\ge0$. These vectors are dense because finite sums of products of slab-supported test
+functions are dense in OS's $\Sch_+$; this density step, like the proposition itself, is argued but
+not yet formalized. Then $B_T$ is the inner
+product of the projections onto $\Omega^\perp$, and the inequality on a dense set is the stated
+operator bound. The spectral theorem converts the operator bound into the spectral statement.
+\end{proof}
+\noindent With Lorentz covariance (from OS~II), this is the Jaffe--Witten gap. The finiteness of
+$m$ follows from non-triviality.
+
+\subsection{Identifying the theory as Yang--Mills}
+The OS axioms, non-triviality and a gap are satisfied by theories that are not Yang--Mills (for
+example Wick powers of a massive free field). Four clauses pin the theory down.
+
+\paragraph{Non-triviality (\lean{NonTrivial}).}
+The fields are centred; some two-point function and some fourth cumulant are non-zero at
+separated points; and some state orthogonal to the vacuum has positive norm.
+
+\paragraph{The lattice clause (\lean{IsWilsonLimit}).}
+For a compact group $G$ with a faithful continuous unitary representation $\pi:G\to U(d)$,
+consider the periodic lattice $(\mathbb{Z}/(L+1))^4$, link variables $U$, plaquettes
+$U_{\mu\nu}(x)$, and Wilson's action~\cite{Wilson1974}
+\[
+S_\beta(U)=\beta\sum_x\sum_{\mu<\nu}\Big(1-\tfrac1d\,\mathrm{Re}\,\tr\,\pi(U_{\mu\nu}(x))\Big),
+\]
+with the Gibbs measure built from normalized Haar measure. The lattice field strength
+$F_{\mu\nu}(x)$ is the traceless Hermitian part of $(\pi(U_{\mu\nu})-\pi(U_{\mu\nu})^\dagger)/2i$,
+and $T_{\mu\nu\kappa\lambda}(x)=\mathrm{Re}\,\tr F_{\mu\nu}(x)F_{\kappa\lambda}(x)$. Smeared
+fields are Riemann sums $a^4\sum_x f(ax)\,Z\,(T(x)-\langle T(x)\rangle)$ with renormalization
+matrices $Z$ valued in the 21-dimensional space of tensors with the symmetries of
+$\tr F_{\mu\nu}F_{\kappa\lambda}$. $S$ is a \emph{Wilson limit} if, along some sequence with
+$a_k\to0$, $a_k(L_k+1)\to\infty$ and $\beta_k\to\infty$, the lattice Schwinger functions
+converge to $S$ on compactly supported test functions with disjoint supports. O(4) acts on the
+fields by $R\otimes R\otimes R\otimes R$; the Lean representation is a monoid homomorphism built
+from Kronecker products.
+
+\paragraph{Full field content (\lean{FullFieldContent}).}
+Every non-zero direction $v$ in the 21-dimensional space yields a non-zero state
+$\varphi_v(h)\Omega$. Without this clause, the existential renormalization matrices could project
+the theory onto a single channel such as $\tr F^2$; this is a finding of the review in
+Section~\ref{sec:review}.
+
+\paragraph{Short-distance asymptotic freedom (\lean{ShortDistanceAF}).}
+In the scalar channel ($v_{\mu\nu\kappa\lambda}=\delta_{\mu\kappa}\delta_{\nu\lambda}-\delta_{\mu\lambda}\delta_{\nu\kappa}$),
+for compactly supported $h_1,h_2$ with disjoint supports and dilations
+$D_\lambda h(x)=\lambda^{-4}h(x/\lambda)$, we require for some $C>0$
+\[
+\lambda^8\log^2(1/\lambda)\;S_2\big(D_\lambda h_1,D_\lambda h_2\big)\;\longrightarrow\;
+C\iint h_1(x)\,h_2(y)\,|x-y|^{-8}\,dx\,dy\qquad(\lambda\to0^+).
+\]
+The motivation is perturbative. The renormalization-group-invariant trace-anomaly operator
+$\Theta=(\beta(g)/2g)F^a_{\mu\nu}F^a_{\mu\nu}$, with $\beta(g)=\mu\,dg/d\mu=-b_0g^3-b_1g^5+\cdots$~\cite{Collins1977},
+has at leading order correlator $\propto\bar g^4(1/|x|)\,|x|^{-8}$, where $\bar g(\mu)$ is the
+running coupling at scale $\mu$; with $\bar g^2(\mu)\sim 1/(2b_0\log(\mu/\Lambda))$ this gives a
+$\log^{-2}$ factor absent in free field theory. The clause therefore excludes free massless gluons even without a gap. It is a
+\emph{requirement}; its validity for Yang--Mills is expected from perturbation theory but is
+not proved.
+
+\paragraph{Asymptotic scaling (\lean{AsymptoticScaling}, $SU(N)$ only).}
+With $\beta=2N/g_0^2$, $b_0=11N/(3(4\pi)^2)$~\cite{Gross1973,Politzer1973} and
+$b_1=34N^2/(3(4\pi)^4)$~\cite{Caswell1974,Jones1974},
+$\beta_k/(2N)-2b_0\log(1/a_k)-(b_1/b_0)\log\log(1/a_k)$ converges as $k\to\infty$.
+
+\subsection{The targets}
+\begin{Verbatim}
+def ClayYangMills : Prop :=
+  ∀ (d₀ : ℕ) (G : Type) [Group G] [TopologicalSpace G] [IsTopologicalGroup G]
+    [CompactSpace G] [ConnectedSpace G] [MeasurableSpace G] [BorelSpace G]
+    (P₀ : GaugeGroup d₀ G),
+    IsSimpleMatrixLieAlgebra P₀.lieAlgebra → ExistsWithMassGapFor G
+
+def IsYangMillsTheoryAlong P S a β : Prop :=
+  OSAxioms tensorRep S ∧ NonTrivial tensorRep S ∧ FullFieldContent S ∧
+    ShortDistanceAF S ∧ IsWilsonLimit P S a β
+\end{Verbatim}
+\lean{ExistsWithMassGapFor G} asserts that, for some faithful unitary representation of $G$,
+there is a Yang--Mills theory in this sense with \lean{HasMassGap}~$\Delta$ for some $\Delta$.
+\lean{ClayExistence} drops the gap. \lean{SUNExists N} uses the fundamental representation of
+$SU(N)$ and adds \lean{AsymptoticScaling}. \lean{SUNExistsWithMassGap N} uses the fundamental
+Wilson action and requires the gap. The docstrings of \lean{SUNExists} and
+\lean{su\_yang\_mills\_exists} call it the shape or scope of OpenAI's announced result. That wording
+predates the 10 November release, was not checked against OpenAI's Lean code, and is left unchanged
+because the statement-file hashes are fixed (Section~\ref{sec:data}).
+
+\subsection{Milestone ladder}
+\lean{SUNExists} bundles two genuinely infrared clauses, full $O(4)$ covariance and the cluster
+property. Given the other axioms, the cluster property is equivalent to uniqueness of the vacuum;
+since \lean{IsWilsonLimit} uses periodic tori with no boundary conditions, the periodic limit itself
+must have a unique vacuum. We therefore define weaker rungs:
+\lean{SUNExistsM7a} (hypercubic covariance, no cluster clause) and \lean{SUNExistsM7b} (full
+$O(4)$, no cluster clause), and prove \lean{SUNExists}~$\to$~M7b~$\to$~M7a in Lean. Only
+\lean{SUNExists} (and \lean{ClayExistence} for general $G$) corresponds to the existence part of
+the Clay problem.
+
+\subsection{Deviations from the Clay text}
+The Clay text is informal in places, so no formal statement can be proved equivalent to it.
+Table~\ref{tab:dev} records each deviation and its direction.
+
+\begin{table}[ht]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}p{4.3cm}p{2.7cm}X@{}}
+\toprule
+Aspect & Direction & Consequence \\
+\midrule
+Gap only on the cyclic space of $\tr F F$ (a subspace of the C-even sector) & weaker & a full proof must add C-odd and higher-dimension fields \\
+Wilson-lattice origin required & stronger/different & other regulators need a universality theorem; Douglas~\cite{Douglas2004} notes the lattice is ``not essential'' \\
+AF fingerprint in the scalar two-point function only & weaker & no stress-tensor or OPE clause \\
+Subsequential limits accepted & choice & axioms and gap are required of the limit, so JW's ``no weak existence'' is met \\
+E0$'$ rather than Glimm--Jaffe OS1 & OS~II's own condition & OS1 is incompatible with the expected singularity of $\tr F^2$ (our argument; see Section~\ref{sec:problem}) \\
+Representation chosen existentially & equivalent intent & a fundamental-representation variant is kept separately \\
+\bottomrule
+\end{tabularx}
+\caption{Deviations of the candidate statement from the Clay problem description.}
+\label{tab:dev}
+\end{table}
+
+%=====================================================================
+\section{Machine-checked results}\label{sec:checked}
+%=====================================================================
+
+Table~\ref{tab:checked} lists the proved theorems. For each, \lean{\#print axioms} reports only
+\lean{propext}, \lean{Classical.choice} and \lean{Quot.sound}. The open problems additionally
+depend on \lean{sorryAx}.
+
+\begin{table}[ht]
+\centering\small
+\begin{tabularx}{\textwidth}{@{}lX@{}}
+\toprule
+Theorem & Content \\
+\midrule
+\lean{trivial\_osAxioms}, \lean{trivial\_massGap} & The trivial theory ($S_0=1$, $S_n=0$) satisfies every OS axiom and has a gap: the axioms as formalized are consistent. \\
+\lean{trivial\_not\_nonTrivial} & \ldots\ but it is not \lean{NonTrivial}: the clause does real work. \\
+\lean{exists\_spatial\_ne\_zero} & Regression guard: the cluster axiom quantifies over a non-empty set. \\
+\lean{partitionFn\_pos}, \lean{expect\_const} & For second-countable $G$ (which includes every compact group with a faithful continuous unitary representation), the Wilson partition function is positive, so lattice expectations are genuine averages; $\langle c\rangle=c$. \\
+\lean{isCompact\_specialUnitaryGroup} & $SU(N)$ is compact (not previously in Mathlib). \\
+\lean{su\_connected} & $SU(N)$ is connected (via \lean{su\_pathConnectedSpace}): $U(N)$ is shown path-connected from Mathlib's \lean{Unitary.joined}, and a determinant-correcting retraction maps it onto $SU(N)$. \\
+\lean{suGauge\_lieAlgebra} & The Lie algebra $\{X:\ e^{tX}\in SU(N)\ \forall t\}$ equals $\mathfrak{su}(N)$; uses $\det e^{Y}=e^{\tr Y}$ for skew-Hermitian $Y$, proved via the spectral theorem. \\
+\lean{su\_isSimple} & $\mathfrak{su}(N)$, $N\ge2$, is a simple real Lie algebra. \\
+\lean{su\_mass\_gap\_of\_clay} & \lean{ClayYangMills} implies the conclusion for $SU(N)$: the general statement is not vacuous. \\
+\lean{SUNExists.toM7b}, \lean{SUNExistsM7b.toM7a} & The milestone ladder is ordered. \\
+\bottomrule
+\end{tabularx}
+\caption{Fully proved results in the statement package.}
+\label{tab:checked}
+\end{table}
+
+\noindent Open (\lean{sorry}): \lean{clay\_yang\_mills}, \lean{clay\_existence},
+\lean{su\_yang\_mills\_exists}, \lean{su\_yang\_mills\_\allowbreak mass\_gap}. One classical but unformalized
+obligation, \lean{os\_nonTrivial\_\allowbreak fullField\_consistent}, asserts that the OS axioms are
+consistent with \lean{NonTrivial} and \lean{FullFieldContent} (witness: Wick-ordered composites
+of the free Maxwell field with values in $\mathfrak{su}(N)$). Consistency of the full Yang--Mills
+conjunction, including \lean{ShortDistanceAF} and the lattice clause, is the open problem itself.
+
+%=====================================================================
+\section{Adversarial review of the statement}\label{sec:review}
+%=====================================================================
+
+\subsection{Method}
+Version 0.1 of the statement was reviewed by six AI reviewer agents (separately prompted,
+context-isolated instances of the same model), each with a distinct lens:
+\begin{itemize}[leftmargin=*]
+\item fidelity to OS~I/II;
+\item mass gap and non-triviality;
+\item whether the lattice clause pins down Yang--Mills;
+\item Lean technicalities and junk values;
+\item comparison with the Clay text and with public formalizations~\cite{Cherkis2026,Yin2026,OpenAI2026m,OpenAI2026j};
+\item a red team instructed to prove or disprove the open theorems cheaply.
+\end{itemize}
+Reviewers worked read-only on the statement but could compile scratch Lean files, so exploits
+were demonstrated, not argued. Each finding then went to a separate verifier agent (same model)
+instructed to refute it, defaulting to ``refuted'' when in doubt. Of 14 verified findings, 13
+survived and 1 was refuted. Compiling exploits in Lean, together with the non-vacuity witnesses of
+Section~\ref{sec:checked}, is in the spirit of the mechanical vacuity checks of Mei and
+Douglas~\cite{Mei2026}, who combine LLM-based semantic review with mechanical numerical and vacuity
+checks and report that LLM judges miss errors those checks catch; our verification of findings, by
+contrast, was LLM-judged.
+
+\subsection{Findings}
+\begin{itemize}[leftmargin=*]
+\item \textbf{Critical: the cluster axiom admitted $a=0$.}
+  \begin{itemize}
+  \item Found separately by three reviewer agents (same model, different lenses).
+  \item The condition ``$a$ spatial'' was encoded as $a^0=0$, which the zero vector satisfies.
+    At $a=0$ the sequence is constant, so the axiom forced exact factorization
+    $S(\Theta A^*B)=S(\Theta A^*)S(B)$. That collapses the OS Hilbert space to $\C\Omega$.
+  \item Consequences: \lean{HasMassGap} followed from the axioms, and the axioms together with
+    \lean{NonTrivial} were unsatisfiable. The open theorems were therefore \emph{provably false},
+    and reviewers' Lean files proved the collapse.
+  \item Fixed by requiring $a\neq0$. The reviewers' exploit files (kept in \lean{scratch/},
+    outside the build) no longer compile, and \lean{exists\_spatial\_ne\_zero} shows that the
+    corrected axiom is not vacuous; no automated regression test yet guards the fixes.
+  \item The trivial-theory sanity check could not have caught this, because the trivial theory
+    factorizes exactly. Non-degenerate witnesses are required.
+  \end{itemize}
+\item \textbf{Major: growth weaker than E0$'$.} The first version bounded $S_n$ by products of
+  per-factor Schwartz norms of order $n\cdot s$. That bound follows from E0$'$ but is not known to
+  imply it: the product-to-E0$'$ argument in the appendix to OS~II needs per-factor norms of fixed
+  order. So OS~II's reconstruction theorem could not be invoked. Replaced by E0$'$ on configuration
+  space.
+\item \textbf{Major: single-channel collapse.} Unconstrained renormalization matrices let a
+  witness keep only $\tr F^2$. Lean lemmas showed that the Wilson-limit, reflection-positivity
+  and gap clauses all survive such a projection. Fixed by \lean{FullFieldContent} and a range
+  condition on $Z$.
+\item \textbf{Major: missing short-distance requirement.} The JW requirement of agreement with
+  asymptotic freedom had no formal counterpart. Added \lean{ShortDistanceAF}, a scalar two-point
+  fingerprint. The stress-tensor and OPE parts of the requirement remain unformalized and are
+  recorded in Table~\ref{tab:dev}; this finding is therefore also only partly fixed.
+\item \textbf{Major: method and representation dependence.} Requiring a Wilson-lattice limit makes
+  the statement method-dependent and, in that respect, stronger than the Clay text, and universal
+  quantification over faithful representations built lattice universality into the target. The
+  representation was made existential. The Wilson-lattice requirement remains and is recorded in
+  Table~\ref{tab:dev}; a method-independent variant is future work. This finding is therefore only
+  partly fixed.
+\item \textbf{Minor: documentation.} The renormalization matrices were described as ``finite''.
+  Any non-trivial limit is expected to need $\|Z_k\|\to\infty$, like $a_k^{-4}$ times
+  channel-dependent powers of $\log(1/a_k)$ (perturbatively $a_k^{-4}$ for the trace-anomaly scalar
+  and $a_k^{-4}g_0^{-2}$ for the stress tensor).
+\end{itemize}
+
+%=====================================================================
+\section{Research landscape}\label{sec:landscape}
+%=====================================================================
+
+We summarise the eleven library notes. Each claim there carries a label: established theorem,
+claimed but unverified, heuristic, disputed or open. The notes also label some claimed solutions as
+containing suspected errors; these are AI agents' assessments, not reviewed by any human expert,
+and should not be read as refereed judgements.
+
+\paragraph{Constructive QFT and renormalization.}
+\begin{itemize}[leftmargin=*]
+\item Superrenormalizable models were constructed in the 1970s~\cite{Glimm1987,Feldman1976}.
+\item The massive Gross--Neveu model in two dimensions is generally cited as the first non-planar,
+  non-hierarchical asymptotically free renormalizable theory to be
+  constructed~\cite{Gawedzki1985a,Feldman1986}; planar $\varphi^4_4$ with the wrong sign was
+  constructed earlier~\cite{Hooft1983,Rivasseau1984}.
+\item Modern renormalization-group methods include~\cite{Bauerschmidt2019,Brydges2015a}, and
+  cluster expansions~\cite{Kotecky1986}.
+\item Aizenman and Duminil-Copin proved that scaling limits of critical four-dimensional Ising and
+  (single-component, nearest-neighbour) lattice $\varphi^4_4$ models are Gaussian~\cite{Aizenman2021}.
+  With the one-loop analysis of Coleman and Gross~\cite{Coleman1973}, this supports, but does not
+  prove, the expectation that a non-trivial four-dimensional theory must be asymptotically free.
+\end{itemize}
+
+\paragraph{Ba{\l}aban's programme.}
+In 1984--1989 Ba{\l}aban proved ultraviolet stability bounds (an upper bound on the partition
+function, and bounds on the effective densities) for lattice Yang--Mills on 3D tori, and on 4D tori
+conditionally on the running couplings staying small, using a gauge-covariant block-spin
+renormalization group. The work spans about 400 pages of
+\emph{Commun.\ Math.\ Phys.}~\cite{Balaban1984a,Balaban1984b,Balaban1985a,Balaban1985c,Balaban1985e,Balaban1985f,Balaban1985g,Balaban1987,Balaban1988b,Balaban1988d,Balaban1989b,Balaban1989c}.
+\begin{itemize}[leftmargin=*]
+\item The 4D theorem is conditional on the running coupling staying small, and an announced
+  companion result on the coupling flow was, according to secondary sources~\cite{Dimock2013a}, never
+  published.
+  Checking this against the primary text is our first stop rule (SR1).
+\item According to these secondary accounts, correlation functions, convergence, infinite volume,
+  the OS axioms and the gap are not treated in Ba{\l}aban's work.
+\item Dimock's expositions~\cite{Dimock2013a,Dimock2013b,Dimock2013c,Dimock2014,Dimock2022} are the
+  only sustained, refereed modern re-derivation of Ba{\l}aban's method; they treat $\varphi^4_3$ and
+  QED$_3$, not non-Abelian Yang--Mills. The 2026 AI-generated manuscripts~\cite{Sussman2026,Aronow2026}
+  are unrefereed.
+\end{itemize}
+
+\paragraph{Rigorous lattice results.}
+\begin{itemize}[leftmargin=*]
+\item Reflection positivity of Wilson's action, and confinement at strong coupling, are due to
+  Osterwalder and Seiler~\cite{Osterwalder1978,Seiler1982}.
+\item Large-$N$ and strong-coupling analyses~\cite{Chatterjee2019,Basu2018,Jafarov2016}, and exact
+  random-surface representations of Wilson-loop expectations~\cite{Cao2025c}.
+\item Finite gauge groups~\cite{Cao2020,Chatterjee2020,Forsstrom2022b}, including correlation
+  decay at weak coupling~\cite{Adhikari2025}.
+\item Stochastic-analysis gaps at strong coupling~\cite{Shen2023}, and area-law
+  regimes~\cite{Cao2025a,Cao2025b}.
+\item Conditional reductions of confinement to correlation decay~\cite{Durhuus1980,Chatterjee2021}.
+\item None reaches the weak-coupling regime of the continuum limit in four dimensions.
+\end{itemize}
+
+\paragraph{Stochastic quantization.}
+\begin{itemize}[leftmargin=*]
+\item Langevin dynamics, gauge-covariant state spaces and universality are established in two
+  dimensions~\cite{Chandra2022,Chevyrev2019,Chevyrev2026b}.
+\item In three dimensions, local solution theory and uniqueness of renormalization are
+  established~\cite{Chandra2024b,Chevyrev2026d}, and Cao and Chatterjee~\cite{Cao2023,Cao2024a}
+  supply a gradient-flow state space.
+\item A construction of the non-Abelian Yang--Mills--Higgs measure on the two-dimensional torus,
+  for all fixed couplings, was posted on 2 November 2026~\cite{Bringmann2026b}. It is an
+  unrefereed preprint, and its authors disclose that several lemmas were proved by AI models.
+\item In four dimensions the Yang--Mills Langevin equation is scaling-critical, which places it
+  outside the locally subcritical class to which regularity structures~\cite{Hairer2014} and
+  related methods apply.
+\item Gradient-flow observables~\cite{Luscher2010a,Luscher2011}, which are UV-finite to all
+  orders of perturbation theory, are a natural observable class.
+\end{itemize}
+
+\paragraph{Mass-gap mechanisms and sanity filters.}
+Any purported proof of a 4D gap must:
+\begin{itemize}[leftmargin=*]
+\item fail for 4D $U(1)$, which has a massless Coulomb phase~\cite{Guth1980,Frohlich1982a};
+\item not prove confinement for finite groups;
+\item respect the $\theta=\pi$ anomaly~\cite{Gaiotto2017}.
+\end{itemize}
+Other relevant results:
+\begin{itemize}[leftmargin=*]
+\item Rigorous confinement (an area law at all couplings) holds for 3D $U(1)$ lattice gauge theory
+  with the Villain action~\cite{Gopfert1982}.
+\item Controlled (physics-level, non-rigorous) semiclassical analyses exhibit gapped, confining
+  regimes on compactified geometries~\cite{Tanizaki2022}; their connection to $\R^4$ rests on an
+  adiabatic-continuity conjecture.
+\item Finite-size uniqueness criteria exist~\cite{Dobrushin1985}.
+\item Computer-assisted renormalization group~\cite{Ebel2025} is a sober calibration of what
+  certified numerics can currently reach.
+\item Lattice Monte Carlo studies~\cite{Morningstar1999,Lucini2013} give strong numerical
+  evidence for the gap.
+\end{itemize}
+
+\paragraph{AI-era claims (all unrefereed).}
+\begin{itemize}[leftmargin=*]
+\item OpenAI's announced results and repositories~\cite{OpenAI2026j,OpenAI2026m,OpenAI2026n}.
+  These include a claimed exponential decay of spin correlations at every positive temperature for
+  the 2D nearest-neighbour $O(n)$ model with $n\ge3$, with a Lean development covering finite
+  free-boundary subgraphs~\cite{OpenAI2026b}.
+\item Sussman--Alp\"oge's 3D manuscripts~\cite{Sussman2026}.
+\item Aronow--Lopatto's 3D continuum limit~\cite{Aronow2026}.
+\item Craig's gauge-invariant lattice measure for chiral fermions~\cite{Craig2026a}.
+\item Public calls for release of OpenAI's material~\cite{AGMAI2026}.
+\end{itemize}
+
+%=====================================================================
+\section{A research programme}\label{sec:programme}
+%=====================================================================
+
+\subsection{What the premise implies}
+If OpenAI's claim is correct and, as reported, its proof is built on Wilson's lattice and
+Ba{\l}aban's renormalization group and covers fermions, then:
+\begin{itemize}[leftmargin=*]
+\item \emph{its} existence theorem is true;
+\item a Ba{\l}aban-type renormalization group on Wilson's lattice can be carried to infinite
+  volume without a mass gap;
+\item the pipeline handles fermions.
+\end{itemize}
+The premise does \emph{not} imply that our \lean{SUNExists} is provable without new infrared
+mathematics. The cluster clause requires vacuum uniqueness for periodic limits. Limits of periodic
+tori can be non-trivial mixtures (as for the low-temperature Ising model, where every periodic limit
+is $\tfrac12(\mu^++\mu^-)$), and the ergodic components of such a mixture need not be periodic
+limits; ruling this out for Yang--Mills needs infrared input. Nor does the premise say anything
+about the gap.
+
+\subsection{Targets and tracks}
+The programme climbs a ladder of frozen Lean statements, each adversarially reviewed and
+hash-recorded before proof search:
+\begin{itemize}[leftmargin=*]
+\item finite-lattice foundations;
+\item a Gaussian $U(1)_4$ calibration rung;
+\item a 4D bounded-field multiscale renormalization group carrying the running coupling and a
+  $\Theta$-source;
+\item a conditional milestone in which Ba{\l}aban's published theorems enter as explicitly named
+  hypotheses, as in OpenAI's repositories;
+\item finite-volume continuum limits;
+\item $T^3_\ell\times\R$ at small $\ell$, the first genuine Hilbert space and gap;
+\item the rungs M7a/M7b/M7c.
+\end{itemize}
+The work is organized in five tracks:
+\begin{itemize}[leftmargin=*]
+\item \textbf{A:} statement, bridges and release audit;
+\item \textbf{B:} demand-driven foundations in Lean;
+\item \textbf{C:} the ultraviolet analysis following Ba{\l}aban, starting from primary sources;
+\item \textbf{D:} infinite volume without a gap;
+\item \textbf{E:} the mass gap, as a capped research portfolio.
+\end{itemize}
+Within Track~E, a desk analysis identified an obstruction. A finite-size criterion that is
+uniform over all volumes and boundary conditions cannot hold in four dimensions beyond bare
+coupling of order one. Take the time-like $SU(2)$ links of a height-one slab and freeze all other
+links to the identity; the conditional measure is then exactly the 3D $O(4)$ model at the same
+$\beta$, which has long-range order for large $\beta$. This is our heuristic argument, not a
+theorem (with generic frozen links one gets an $O(4)$ model in an $SO(4)$ background, which can be
+frustrated). It directs any certificate approach to cube-restricted criteria.
+
+\subsection{AI operating model}
+The design draws on the published record of OpenAI's Navier--Stokes swarm. That swarm reportedly
+used groups of agents with in-group messaging, a seeding stage from an Euler result, consolidation
+of insights across groups, and a separate formalization
+stage~\cite{OpenAI2026g,Howlett2026h,OpenAI2026k}. OpenAI researchers credit base-model strength
+over multi-agent organisation~\cite{Patel2026}, and critics have documented the risks of scope
+loopholes~\cite{Howlett2026b,Constantin2026c} and of Lean/paper drift~\cite{Bastounis2026}. The
+design also draws on OpenAI's Lean repositories: Comparator-gated challenges, honest-axiom
+patterns, conditional hypotheses, and metadata
+files~\cite{OpenAI2026m,OpenAI2026j,OpenAI2026l,LeanFRO2026,Mathlib2026b}.
+Its principles are:
+\begin{enumerate}[leftmargin=*]
+\item \textbf{The compiled Lean skeleton is the coordination substrate.} Each rung theorem is
+  proved in Lean from a small number of named module contracts.
+\item \textbf{Agents read contracts, not proofs.} Context is bounded.
+\item \textbf{Mechanical checks first, model judgement second, the kernel last.} LLM skeptics
+  are a rejection filter calibrated by planted errors, never an acceptance gate.
+\item \textbf{Swarms only where the decomposition is unknown.}
+\item \textbf{Provenance by construction.}
+\end{enumerate}
+Blueprint tooling~\cite{Massot2026,Becker2024} and Comparator~\cite{LeanFRO2026} provide the
+gates.
+
+\subsection{Honest odds and stop rules}
+The programme adopts the subjective estimates of its feasibility review. At a sustained budget
+of about $10^{10}$ output tokens per year:
+\begin{itemize}[leftmargin=*]
+\item an independent, Comparator-checked \lean{SUNExists} is $\le1\%$ within 12 months and
+  3--8\% within 36 months;
+\item a Lean bridge from OpenAI's theorem to ours is 60--80\% likely within 3 months
+  \emph{if} their statement implies ours up to bookkeeping;
+\item the 4D mass gap is $<0.1\%$ within 12 months and $<0.5\%$ within 36 months at this budget,
+  and $<1\%$ within 36 months even at a Navier--Stokes-scale budget of about $10^{11}$ tokens per
+  year.
+\end{itemize}
+Nine stop rules tie continuation to measurable checkpoints:
+\begin{itemize}[leftmargin=*]
+\item choosing the clean-room/bridge/consume mix fourteen days after OpenAI's release;
+\item confirmation of the Ba{\l}aban gap in the primary text;
+\item calibrated derivation of $b_0$ in Ba{\l}aban's scheme;
+\item measured closure rate on a pilot formalization of Dimock's $\varphi^4_3$ analysis;
+\item canary recall of the review gates;
+\item spend caps;
+\item Track~E caps;
+\item switching to verification if a complete public 4D manuscript appears;
+\item withdrawing the clean-room label from artefacts affected by a firewall breach.
+\end{itemize}
+
+\subsection{Independence and ethics}
+Until OpenAI's release (10 November 2026), all work was clean-room by necessity; by policy it stays
+clean-room for fourteen days after the release (to 24 November), after which the author chooses among three modes:
+\begin{itemize}[leftmargin=*]
+\item \emph{clean-room}: no artefact derived from the release;
+\item \emph{bridge}: our statement proved from theirs;
+\item \emph{consume}: study the release and re-derive it.
+\end{itemize}
+Leakage controls and labelling rules accompany each mode. The programme commits to:
+\begin{itemize}[leftmargin=*]
+\item contacting Sussman and Alp\"oge before duplicating their four-dimensional modules;
+\item respecting the committee's process;
+\item disclosing AI use;
+\item publishing any claimed proof, or any formal result beyond this candidate statement, only
+  after Comparator checking and review by human experts, with no press releases. This paper itself
+  is released without human expert review (Section~\ref{sec:ai}), as a candidate statement and a
+  plan, not as a result.
+\end{itemize}
+
+%=====================================================================
+\section{Limitations}
+%=====================================================================
+\begin{itemize}[leftmargin=*]
+\item The statement is a \emph{candidate}. It has been reviewed adversarially by AI agents, not
+  audited by human experts in constructive QFT. Its fidelity to the Clay problem is argued, not
+  proved; Table~\ref{tab:dev} lists the known deviations.
+\item The mass-gap clause covers only the cyclic space of the dimension-four fields.
+\item Consistency of OS + \lean{NonTrivial} + \lean{FullFieldContent} is asserted but not yet
+  formalized.
+\item The library relies on secondary sources in important places. No paper of Ba{\l}aban's series
+  was read in full (the publisher's site blocked automated access), so
+  Section~\ref{sec:landscape}'s account of his work rests on Dimock's expositions, other secondary
+  accounts and an unvetted third-party transcription. OpenAI's blog posts~\cite{OpenAI2026g,OpenAI2026p}
+  returned HTTP~403 and were reconstructed from press and blog reports. Douglas's 2026
+  review~\cite{Douglas2026f} was not read. Bibliography entries that could not be confirmed are
+  flagged.
+\item The Proposition of Section~3.3 and the equivalence of the multilinear axioms with OS's
+  formulation are argued, not formalized.
+\item The research programme's odds are subjective. Its operating model is untested at the
+  scale required.
+\item Nothing here independently evaluates OpenAI's claimed proof. Its Lean code, released on
+  10 November 2026~\cite{Douglas2026g}, was not examined for this version; a comparison of the two
+  statements is left to a later version.
+\end{itemize}
+
+%=====================================================================
+\section{Disclosure of AI use}\label{sec:ai}
+%=====================================================================
+
+This disclosure follows, as far as they apply to an individual's project, the disclosure items
+that the Advisory Group on Mathematics and AI lists for AI-generated mathematics~\cite{AGMAI2026a}:
+model, prompts, time, compute, and how AI was used. Those guidelines are addressed mainly to AI
+laboratories. Provided here: the model family and environment; the prompt given to every subagent
+(in the workflow scripts, \lean{dev/workflows/}); and wall-clock times, tool calls and subagent
+token counts. Not included in this deposit: exact model versions (the Git commit messages in the GitHub repository carry an automatic
+co-author line naming only the model of the committing session), the author's natural-language
+instructions to the orchestrating session, that session's transcript and token count, summaries of
+the models' reasoning, and monetary cost.
+
+\paragraph{Systems used.}
+The work was carried out with Anthropic's Claude large language models, operated through the Claude
+Code agent environment. That environment includes a workflow facility that orchestrates many
+subagents in parallel, file, shell, web-search and web-fetch tools, and the Lean toolchain. Research
+subagents also used the alphaXiv paper-search and PDF question-answering service, a third-party tool
+whose answers may themselves be machine-generated. The models' training data predate the September
+2026 events discussed here; all information about those events was obtained by live retrieval
+during the work.
+
+\paragraph{What the human author did.}
+The author:
+\begin{itemize}[leftmargin=*]
+\item set the goal and the working premise;
+\item directed the work in natural language and answered the agents' questions;
+\item chose the repository visibility, publication route and licences;
+\item takes responsibility for publication.
+\end{itemize}
+The author did not hand-write the mathematics, the Lean code or the prose.
+
+\paragraph{Human review.}
+The author read the paper before deposit, including the passages revised on 10--11 November, but is
+not trained in constructive quantum field theory or
+in Lean, and could not independently check the mathematics, the physics or the Lean code. For these
+the paper relies on the Lean kernel (Section~\ref{sec:checked}) and on the AI review described in
+Section~\ref{sec:review}. No human domain expert has reviewed this work. No text-overlap
+(plagiarism) check was run on the AI-generated text; quotations were checked against their sources
+by AI agents only. Corrections are welcome as issues on the GitHub repository.
+
+\paragraph{What AI systems did.}
+AI agents performed essentially all of the following:
+\begin{itemize}[leftmargin=*]
+\item literature search and summarization;
+\item drafting of the library notes, the problem description, the plan and this paper (the
+  orchestrating session wrote the Lean statement, its version~0.2 fixes, the problem description,
+  the plan and this paper; subagents wrote the notes, reviews, critiques and non-vacuity proofs);
+\item design and writing of the Lean statement and all Lean proofs;
+\item adversarial review and verification of the statement, the notes, the plan and this paper.
+\end{itemize}
+
+\paragraph{Scale and structure (subagents only).}
+\begin{itemize}[leftmargin=*]
+\item \textbf{Research library.} 24 subagents (11 researchers, 11 adversarial citation and claim
+  verifiers, an indexer and a completeness critic): about $9.1\times10^6$ tokens, 2{,}560 tool
+  calls, about 2.0~hours.
+\item \textbf{Statement review.} 20 subagents (6 reviewers, 14 verifiers): about $3.6\times10^6$
+  tokens, 272 tool calls, about 24~minutes.
+\item \textbf{Plan critique.} 5 subagents: about $2.0\times10^6$ tokens, 194 tool calls, about
+  28~minutes.
+\item \textbf{Non-vacuity Lean proofs.} 3 subagents: about $0.6\times10^6$ tokens, 70 tool calls,
+  about 12~minutes.
+\item \textbf{Paper verification.} 7 subagents (four citation checkers, a factual-claims auditor, a
+  mathematics reviewer and a disclosure reviewer): about $2.0\times10^6$ tokens, 336 tool calls,
+  about 22~minutes. Their findings, including the omitted citation of~\cite{Remondiere2026}, were
+  applied before deposit.
+\item \textbf{Pre-release audit.} 25 subagents (four auditors for privacy, reproducibility,
+  metadata and claims, and 21 adversarial verifiers): about $4.2\times10^6$ tokens, 473 tool calls,
+  about 19~minutes. It ran on 10 November 2026, after the release, with web access. It rebuilt the
+  Lean project and the paper from a clean export of the then-current commit, and found that OpenAI's
+  Lean code had been released, which made this paper's earlier pre-registration claim false. To
+  confirm the release, its agents retrieved the released repositories' metadata, file listings and
+  README files; none opened OpenAI's Lean files or the committee's assessment. Its confirmed findings
+  were applied before deposit. Its result record is not included, because it quotes the private
+  details it was searching for.
+\item \textbf{Post-release wording check.} 21 subagents (four checkers for facts, consistency,
+  honesty and privacy, and 17 adversarial verifiers), instructed not to open OpenAI's Lean code or
+  the assessment: about $3.8\times10^6$ tokens, 394 tool calls, about 14~minutes. Its confirmed
+  findings were applied before deposit.
+\end{itemize}
+The orchestration scripts, which contain every subagent prompt, are included in the repository
+(\lean{dev/workflows/}).
+
+\paragraph{Verification and its limits.}
+\begin{itemize}[leftmargin=*]
+\item Every result in Table~\ref{tab:checked} is checked by Lean's kernel when the project is
+  built, and \lean{Audit.lean} reproduces the axiom report. No independent replay (for example
+  with \lean{lean4checker} or Comparator) has yet been run.
+\item Every bibliography entry was checked by an AI verifier for existence and bibliographic
+  metadata against arXiv, Crossref or the cited URL. This does not mean that the cited content was
+  read. Entries that could not be confirmed are flagged.
+\item Natural-language claims were reviewed only by AI agents, all instances of the same model
+  family, whose judgements may be correlated; errors may remain.
+\end{itemize}
+
+\paragraph{Authorship, competing interests and funding.}
+AI systems are not listed as authors, in line with prevailing publication norms; responsibility
+rests with the human author. The author declares no employment by, funding from, or financial
+interest in OpenAI, Anthropic or any other AI developer, and received no funding for this work. Use
+of the AI systems was paid for by the author through a commercial subscription. Anthropic, whose
+models were used, had no role in the design, conduct or reporting of this work.
+
+%=====================================================================
+\section{Data and code availability}\label{sec:data}
+%=====================================================================
+The complete package is at \url{https://github.com/betterfuture2030/yang-mills-lean} and in its
+Zenodo archive, which is built from the tagged Git commit:
+\begin{itemize}[leftmargin=*]
+\item the Lean project (\lean{lean/YangMills});
+\item the problem description (\lean{PROBLEM.md});
+\item the eleven library notes, the completeness critique and the bibliography
+  (\lean{library/});
+\item the plan and its five critiques (\lean{plan/});
+\item the workflow scripts and their run summaries (\lean{dev/workflows/});
+\item this paper (\lean{paper/}).
+\end{itemize}
+Third-party PDFs are not redistributed. A manifest with arXiv identifiers and a download script
+(\lean{scripts/fetch\_pdfs.sh}) is provided instead.
+
+\paragraph{Statement-file hashes.} SHA-256 of the statement files of version~0.2.0:
+\begin{Verbatim}
+lean/YangMills/YangMills/OS.lean
+  36b5f3695467ed0206d12a70c0705b669d34cf9df9695982ef521eecfd546a33
+lean/YangMills/YangMills/Lattice.lean
+  f5807c28379cfcea5175e0fc14205b590792f89e3f7b10613cf6b77e1c1637ce
+lean/YangMills/YangMills/SU.lean
+  876d8e2c064c30c71a890bd243b1e5df4e91c994b7a1d4824eb3bfebe7dc8c1e
+lean/YangMills/YangMills/Statement.lean
+  9cbfec13626e1c3eab5f68d91a598f50765f6c3b9a3d45b5ecece2dc29a5bd05
+lean/YangMills/YangMills/OpenProblems.lean
+  99751a4eb989696b4c17c1eb4148643480f5786451e338df3b71f893746c009b
+\end{Verbatim}
+
+To reproduce the audit:
+\begin{Verbatim}
+cd lean/YangMills && lake exe cache get && lake build
+lake env lean YangMills/Audit.lean
+\end{Verbatim}
+Text is licensed under CC~BY~4.0 and Lean code under Apache-2.0.
+
+\section*{Acknowledgements}
+The author thanks the authors and maintainers of Lean, Mathlib and the public formalizations and
+manuscripts cited here; none of them was consulted about, or is responsible for, this work.
+
+\bibliographystyle{unsrtnat}
+\bibliography{refs}
+
+\end{document}

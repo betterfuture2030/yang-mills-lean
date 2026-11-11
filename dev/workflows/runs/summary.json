@@ -1,0 +1,66 @@
+{
+ "note": "Subagent statistics as reported by the Claude Code workflow runner. The orchestrating session's own token use is not included.",
+ "runs": [
+  {
+   "workflow": "ym-research-library",
+   "purpose": "research library",
+   "subagents": 24,
+   "subagent_tokens": 9142475,
+   "tool_calls": 2560,
+   "wall_clock_minutes": 119.4
+  },
+  {
+   "workflow": "ym-statement-review",
+   "purpose": "statement review (v0.1 -> v0.2)",
+   "subagents": 20,
+   "subagent_tokens": 3639596,
+   "tool_calls": 272,
+   "wall_clock_minutes": 24.2
+  },
+  {
+   "workflow": "ym-plan-critique",
+   "purpose": "plan critique (v0.1 -> v0.2)",
+   "subagents": 5,
+   "subagent_tokens": 2025700,
+   "tool_calls": 194,
+   "wall_clock_minutes": 28.4
+  },
+  {
+   "workflow": "ym-nonvacuity-lean",
+   "purpose": "non-vacuity Lean proofs",
+   "subagents": 3,
+   "subagent_tokens": 574347,
+   "tool_calls": 70,
+   "wall_clock_minutes": 11.8
+  },
+  {
+   "workflow": "ym-paper-verify",
+   "purpose": "paper verification (pre-deposit)",
+   "subagents": 7,
+   "subagent_tokens": 1991910,
+   "tool_calls": 336,
+   "wall_clock_minutes": 21.9
+  },
+  {
+   "workflow": "ym-release-audit",
+   "purpose": "pre-release audit (privacy, reproducibility, metadata, claims)",
+   "subagents": 25,
+   "subagent_tokens": 4212770,
+   "tool_calls": 473,
+   "wall_clock_minutes": 18.6
+  },
+  {
+   "workflow": "ym-post-release-check",
+   "purpose": "post-release wording check (facts, consistency, honesty, privacy)",
+   "subagents": 21,
+   "subagent_tokens": 3778200,
+   "tool_calls": 394,
+   "wall_clock_minutes": 14.3
+  }
+ ],
+ "statement_review_verdicts": {
+  "findings_verified": 14,
+  "survived": 13,
+  "refuted": 1
+ }
+}
